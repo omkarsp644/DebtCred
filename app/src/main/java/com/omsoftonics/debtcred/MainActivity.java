@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 finally {
-                    startActivity(new Intent(com.omsoftonics.debtcred.MainActivity.this, Dashboard.class));
+                    startActivity(new Intent(MainActivity.this, Dashboard.class));
                     finish();
                 }
             }

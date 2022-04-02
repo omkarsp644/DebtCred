@@ -20,6 +20,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static com.omsoftonics.debtcred.MainActivity.currentInformation;
 import static com.omsoftonics.debtcred.activity.Registervargani.indexValue;
 import static com.omsoftonics.debtcred.activity.Registervargani.isFromRecord;
 
@@ -67,16 +68,16 @@ public class DisplayVarganiRecordsAdapter extends RecyclerView.Adapter<DisplayVa
             public void onClick(View view) {
 
 
-                Toast.makeText(activity,"ID :"+varganireciepts.get(finalPosition).getIndex()+"   "+varganireciepts.get(finalPosition), Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity,"ID :"+varganireciepts.get(finalPosition).getArrayIndex()+"   "+varganireciepts.get(finalPosition), Toast.LENGTH_SHORT).show();
                 AlertDialog.Builder alert=new AlertDialog.Builder(activity);
-                alert.setTitle("Want to Edit Data...?");
+                alert.setTitle("Want to Edit or Delete...?");
                 alert.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         EditValues(finalPosition);
                     }
                 });
-                alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                alert.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
@@ -97,9 +98,10 @@ public class DisplayVarganiRecordsAdapter extends RecyclerView.Adapter<DisplayVa
                 alert.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        currentInformation.UpdateRecord(varganireciepts.get(finalPosition));
                         varganireciepts.get(finalPosition1).RemoveRecord(activity);
-                        currentEventInformation.DeleteVarganiRecord(varganireciepts.get(finalPosition1));
-                        currentEventInformation.UpdateRecord(activity);
+                        currentInformation.DeleteRecord(varganireciepts.get(finalPosition1));
+
                         notifyDataSetChanged();
 
                     }
@@ -129,16 +131,16 @@ public class DisplayVarganiRecordsAdapter extends RecyclerView.Adapter<DisplayVa
 
 
 
-        EditText name=(EditText)activity.findViewById(R.id.);
-        name.setText(varganireciepts.get(finalPosition).getName());
+        EditText name=(EditText)activity.findViewById(R.id.income_name);
+        name.setText(varganireciepts.get(finalPosition).getComment());
 
 
-        EditText amount=(EditText)activity.findViewById(R.id.amountPaid);
+        EditText amount=(EditText)activity.findViewById(R.id.income_amount);
         amount.setText(Integer.toString(varganireciepts.get(finalPosition).getAmount()));
 
         isFromRecord=true;
 
-        indexValue=varganireciepts.get(finalPosition).getIndex();
+        indexValue=varganireciepts.get(finalPosition).getArrayIndex();
     }
 
     @Override

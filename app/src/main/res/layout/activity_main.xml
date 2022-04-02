@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/exp_backg"
     tools:context=".MainActivity">
 
   <androidx.cardview.widget.CardView
@@ -12,12 +11,12 @@
       android:layout_centerHorizontal="true"
       android:layout_centerVertical="true"
       app:cardElevation="10sp"
-      app:cardCornerRadius="20sp"
+      app:cardCornerRadius="30sp"
       android:layout_width="wrap_content">
       <ImageView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:src="@drawable/varganilogo"/>
+          android:layout_width="300sp"
+          android:layout_height="300sp"
+          android:src="@drawable/debtcred"/>
   </androidx.cardview.widget.CardView>
 
     <TextView
@@ -26,7 +25,9 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="10sp"
         android:layout_height="50sp"
+        android:textStyle="bold"
         android:text="Om Softonics"
-        android:textColor="@color/white"
+
+        android:textColor="@color/red"
         android:textSize="20sp"/>
 </RelativeLayout>

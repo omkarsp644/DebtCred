@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Debtcred Manager</string>
+    <string name="app_name">Debtcred</string>
     <string name="menu_options">Menu Options :</string>
-    <string name="day_wise_collection_trend">Day Wise Expense</string>
+    <string name="day_wise_collection_trend">Income and Expense Trends</string>
 
     <string name="expense">Expense</string>
     <string name="expense_for_what">Expense For What</string>
@@ -13,7 +13,7 @@
     <string name="rec_id">ID</string>
     <string name="payer_name">Comment</string>
     <string name="amount">Amount</string>
-    <string name="record">Balance</string>
+    <string name="balance">Balance</string>
     <string name="pending">Pending</string>
     <string name="vargani_balance">Vargani Balance</string>
     <string name="expanditure">Expense</string>
@@ -47,4 +47,5 @@
     <string name="delete">Delete</string>
     <string name="removed_successfully">Removed Successfully...</string>
     <string name="cancel">Cancel</string>
+    <string name="Income">Income</string>
 </resources>

@@ -8,10 +8,12 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        app:cardCornerRadius="20sp"
+        android:layout_margin="5sp"
+        app:cardBackgroundColor="#2B2B2B"
+        android:layout_height="wrap_content">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,7 +32,7 @@
                     android:text="DebtCred"
                     android:id="@+id/eventNameDash"
                     android:maxEms="5"
-                    android:textSize="30sp"
+                    android:textSize="25sp"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="@color/white"/>
@@ -45,111 +47,167 @@
                         android:src="@drawable/ic_baseline_sync_24"
                     />
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:weightSum="1"
-                >
-                    <TextView
-                        android:layout_width="0sp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/record"
-                        android:layout_weight="0.5"
-                        android:textStyle="bold"
-                        android:textColor="@color/white"
-                        android:layout_gravity="center"
-                        android:gravity="center"/>
-                    <TextView
-                        android:layout_width="0sp"
-                        android:layout_weight="0.5"
-                        android:layout_height="wrap_content"
-                        android:text="@string/expanditure"
-                        android:textStyle="bold"
-                        android:textColor="@color/white"
-                        android:layout_gravity="center"
-                        android:gravity="center"/>
+    </androidx.cardview.widget.CardView>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:weightSum="1"
-                >
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="0sp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10sp"
-                    android:layout_weight="0.5"
-                    app:cardCornerRadius="20sp"
-                    app:cardElevation="10sp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:drawableStart="@drawable/topo"
-                        android:drawablePadding="10sp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/income_backg"
-                        android:id="@+id/eventIncomeDash"
-                        android:padding="20sp"
-                        android:gravity="center"
-                        android:text="12345645"
-                        android:textColor="@android:color/white"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="0sp"
-                    android:layout_weight="0.5"
-                    android:layout_margin="10sp"
-                    app:cardCornerRadius="20sp"
-                    app:cardElevation="10sp"
-                    android:layout_height="wrap_content"
-                    >
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="12345645"
-                        android:background="@drawable/exp_backg"
-                        android:drawablePadding="10sp"
-                        android:drawableStart="@drawable/topi"
-                        android:textStyle="bold"
-                        android:textSize="20sp"
-                        android:id="@+id/eventExpenseDash"
-                        android:textColor="@android:color/white"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:padding="20sp"/>
-                </androidx.cardview.widget.CardView>
-            </LinearLayout>
-        </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="50sp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/day_wise_collection_trend"
+        android:text="Hello User ,"
         android:textColor="@color/white"
-        android:textSize="20sp"
-        android:layout_margin="10sp"
+        android:textSize="12dp"
+        android:layout_marginStart="10sp"
+        android:layout_marginEnd="10sp"
         android:textStyle="bold"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Good morning,\nWishing a great day ahead"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:layout_marginTop="10sp"
+        android:layout_marginStart="10sp"
+        android:layout_marginEnd="10sp"
+        android:textStyle="bold"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="30sp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your Previous Trasactions"
+        android:textSize="15sp"
+        android:layout_margin="5sp"
+        android:textColor="@color/white"/>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/display_previous_Transactions"/>
+    </HorizontalScrollView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="30sp"/>
+
+
+
+    <!--    <TextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/day_wise_collection_trend"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="20sp"-->
+<!--        android:layout_margin="10sp"-->
+<!--        android:textStyle="bold"/>-->
 <!--        https://github.com/NandagopalR/awesome-android-1-->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_margin="10sp"
             app:cardCornerRadius="20sp"
+            app:cardBackgroundColor="#505050"
             app:cardElevation="30sp"
             android:layout_height="wrap_content"
             >
-            <lecho.lib.hellocharts.view.LineChartView
-                android:id="@+id/eventLineChartDash"
-                android:layout_margin="10sp"
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="200sp" />
+                android:layout_height="wrap_content"
+
+                android:orientation="vertical">
+                <lecho.lib.hellocharts.view.LineChartView
+                    android:id="@+id/eventLineChartDash"
+                    android:layout_margin="10sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="200sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="5sp"
+                    android:weightSum="3"
+                    >
+
+                    <TextView
+                        android:layout_width="0sp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/expanditure"
+                        android:textStyle="bold"
+                        android:textColor="@color/red"
+                        android:layout_gravity="center"
+                        android:gravity="center"/>
+                    <TextView
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/balance"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:textColor="@color/lightblue"
+                        android:layout_gravity="center"
+                        android:gravity="center"/>
+                    <TextView
+                        android:layout_width="0sp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/Income"
+                        android:textStyle="bold"
+                        android:textColor="@color/greenone"
+                        android:layout_gravity="center"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_margin="5sp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:weightSum="3"
+                    >
+                    <TextView
+                        android:layout_width="0sp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/expanditure"
+                        android:textStyle="bold"
+                        android:id="@+id/eventExpenseDash"
+                        android:textSize="15sp"
+                        android:textColor="@color/red"
+                        android:layout_gravity="center"
+                        android:gravity="center"/>
+                    <TextView
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/balance"
+                        android:layout_weight="1"
+                        android:textSize="15sp"
+                        android:id="@+id/eventBalanceDash"
+                        android:textStyle="bold"
+                        android:textColor="@color/lightblue"
+                        android:layout_gravity="center"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:layout_width="0sp"
+                        android:layout_weight="1"
+                        android:textSize="15sp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/Income"
+                        android:textStyle="bold"
+                        android:id="@+id/eventIncomeDash"
+                        android:textColor="@color/greenone"
+                        android:layout_gravity="center"
+                        android:gravity="center"/>
+                </LinearLayout>
+            </LinearLayout>
+
         </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView

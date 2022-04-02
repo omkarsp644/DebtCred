@@ -7,9 +7,12 @@
     import android.content.pm.PackageManager;
     import android.os.Bundle;
     import android.view.View;
+    import android.widget.ImageView;
+    import android.widget.LinearLayout;
     import android.widget.TextView;
     import android.widget.Toast;
 
+    import com.omsoftonics.debtcred.MainActivity;
     import com.omsoftonics.debtcred.R;
     import com.omsoftonics.debtcred.helper.PrintPDFInformation;
     import com.omsoftonics.debtcred.model.MoneyInformation;
@@ -44,8 +47,9 @@
 
 
         LineChartView lineChartView ;
-        TextView eventName,income,expense;
+        TextView eventName,income,expense,balance;
         CardView printData;
+        LinearLayout displayPreviousTransactions;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +64,8 @@
        // InitializeDataForGraphs();
 
 
+
+
     }
 
         @Override
@@ -67,6 +73,9 @@
             super.onStart();
             eventName=(TextView)findViewById(R.id.eventNameDash);
             income=(TextView)findViewById(R.id.eventIncomeDash);
+            balance=(TextView)findViewById(R.id.eventBalanceDash);
+            displayPreviousTransactions=(LinearLayout)findViewById(R.id.display_previous_Transactions);
+
 
             printData=(CardView)findViewById(R.id.printData);
             expense=(TextView)findViewById(R.id.eventExpenseDash);
@@ -74,9 +83,52 @@
 
             income.setText(Integer.toString(currentInformation.getIncome_Total()));
             expense.setText(Integer.toString(currentInformation.getExpense_Total()));
-
+            balance.setText(Integer.toString((currentInformation.getBalance())));
      
            // InitializeDataForGraphs();
+
+
+            displayPreviousTransactions.removeAllViews();
+            for (int i=currentInformation.getRecord_List().size()-1;i>=0;i--){
+                Record rec=currentInformation.getRecord_List().get(i);
+
+                View v=getLayoutInflater().inflate(R.layout.display_previous_trans,null,false);
+
+                TextView date=(TextView) v.findViewById(R.id.displaydate);
+
+                TextView comment=(TextView) v.findViewById(R.id.displayComment);
+
+                TextView amount=(TextView) v.findViewById(R.id.displayAmount);
+
+                ImageView img=(ImageView)v.findViewById(R.id.displayImage);
+
+//                CardView card=v.findViewById(R.id.cardBack);
+
+
+                if (rec.getRecordType()== MainActivity.RECORD_TYPE_EXPENSE){
+                    date.setTextColor(getResources().getColor(R.color.redRec));
+                    comment.setTextColor(getResources().getColor(R.color.redRec));
+                    amount.setTextColor(getResources().getColor(R.color.redRec));
+                    img.setImageDrawable(getResources().getDrawable(R.drawable.expense_new));
+//                    card.setBackgroundColor(getResources().getColor(R.color.redRecFaint));
+                }
+                else{
+
+                    date.setTextColor(getResources().getColor(R.color.greenRec));
+                    comment.setTextColor(getResources().getColor(R.color.greenRec));
+                    amount.setTextColor(getResources().getColor(R.color.greenRec));
+                    img.setImageDrawable(getResources().getDrawable(R.drawable.income_new));
+
+//                    card.setBackgroundColor(getResources().getColor(R.color.greenRecFaint));
+                }
+                date.setText(rec.getDate());
+                comment.setText(rec.getComment());
+                amount.setText(""+rec.getAmount());
+
+
+                displayPreviousTransactions.addView(v);
+
+            }
 
 
 

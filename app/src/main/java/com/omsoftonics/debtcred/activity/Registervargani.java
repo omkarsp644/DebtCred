@@ -18,7 +18,9 @@ import com.omsoftonics.debtcred.model.Record;
 import com.omsoftonics.debtcred.sqlitehelper.SqliteDatabaseHelper;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.stream.Collectors;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -46,7 +48,7 @@ public class Registervargani extends AppCompatActivity {
         setContentView(R.layout.activity_register_vargani);
 
         helper=new SqliteDatabaseHelper(this);
-        adapter=new DisplayVarganiRecordsAdapter(Registervargani.this,currentInformation.getRecord_List());
+        adapter=new DisplayVarganiRecordsAdapter(Registervargani.this,new ArrayList<Record>(currentInformation.getRecord_List().stream().filter(p->p.getRecordType()==MainActivity.RECORD_TYPE_INCOME).collect(Collectors.toList())));
         displayVarganiRecords=(RecyclerView)findViewById(R.id.displayVarganiRecords);
 
         try {
@@ -64,7 +66,7 @@ public class Registervargani extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 displayVarganiRecords.removeAllViews();
 
-                adapter=new DisplayVarganiRecordsAdapter(Registervargani.this, helper.GetSpecificIncomeRecords(query));
+                adapter=new DisplayVarganiRecordsAdapter(Registervargani.this, new ArrayList<Record>(helper.GetSpecificIncomeRecords(query).stream().filter(p->p.getRecordType()==MainActivity.RECORD_TYPE_INCOME).collect(Collectors.toList())));
                 displayVarganiRecords.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 displayVarganiRecords.setAdapter(adapter);
                 return true;
@@ -74,7 +76,7 @@ public class Registervargani extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 displayVarganiRecords.removeAllViews();
 
-                adapter=new DisplayVarganiRecordsAdapter(Registervargani.this, helper.GetSpecificIncomeRecords(newText));
+                adapter=new DisplayVarganiRecordsAdapter(Registervargani.this, new ArrayList<Record>(helper.GetSpecificIncomeRecords(newText).stream().filter(p->p.getRecordType()==MainActivity.RECORD_TYPE_INCOME).collect(Collectors.toList())));
                 displayVarganiRecords.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 displayVarganiRecords.setAdapter(adapter);
 
@@ -85,7 +87,7 @@ public class Registervargani extends AppCompatActivity {
 
         todaysDate=(TextView)findViewById(R.id.currentDate);
         comment=(EditText)findViewById(R.id.income_name);
-        amonut=(EditText)findViewById(R.id.income_amountPaid);
+        amonut=(EditText)findViewById(R.id.income_amount);
         registerVargani=(TextView)findViewById(R.id.registerVargani);
         todaysDate.setText(GetCurrentdate());
 
@@ -153,7 +155,7 @@ public class Registervargani extends AppCompatActivity {
 
         adapter.notifyDataSetChanged();
 
-        adapter=new DisplayVarganiRecordsAdapter(Registervargani.this,currentInformation.getRecord_List());
+        adapter=new DisplayVarganiRecordsAdapter(Registervargani.this,new ArrayList<Record>(currentInformation.getRecord_List().stream().filter(p->p.getRecordType()==MainActivity.RECORD_TYPE_INCOME).collect(Collectors.toList())));
         displayVarganiRecords=(RecyclerView)findViewById(R.id.displayVarganiRecords);
 
         try {

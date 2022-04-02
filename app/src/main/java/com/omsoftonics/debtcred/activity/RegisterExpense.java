@@ -9,9 +9,16 @@ import android.widget.Toast;
 import com.omsoftonics.debtcred.MainActivity;
 import com.omsoftonics.debtcred.R;
 import com.omsoftonics.debtcred.adapter.DisplayExpenseRecordsAdapter;
+import com.omsoftonics.debtcred.adapter.DisplayVarganiRecordsAdapter;
 import com.omsoftonics.debtcred.model.Record;
+import com.omsoftonics.debtcred.sqlitehelper.SqliteDatabaseHelper;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static com.omsoftonics.debtcred.MainActivity.currentInformation;
@@ -25,6 +32,7 @@ public class RegisterExpense extends AppCompatActivity {
     TextView addExpense;
     RecyclerView displayExpense;
     DisplayExpenseRecordsAdapter adapter;
+    SqliteDatabaseHelper helper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +51,7 @@ public class RegisterExpense extends AppCompatActivity {
 
 
         displayExpense=(RecyclerView)findViewById(R.id.displayExpenseRecords);
-        adapter=new DisplayExpenseRecordsAdapter(this);
+        adapter=new DisplayExpenseRecordsAdapter(this,new ArrayList<Record>(currentInformation.getRecord_List().stream().filter(p->p.getRecordType()==MainActivity.RECORD_TYPE_EXPENSE).collect(Collectors.toList())));
         try {
             displayExpense.setAdapter(adapter);
         }
@@ -56,6 +64,37 @@ public class RegisterExpense extends AppCompatActivity {
                 registerExpense();
             }
         });
+
+
+        helper=new SqliteDatabaseHelper(this);
+
+        SearchView searchView=(SearchView) findViewById(R.id.searchView);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                displayExpense.removeAllViews();
+
+
+                adapter=new DisplayExpenseRecordsAdapter(RegisterExpense.this, new ArrayList<Record>(helper.GetSpecificIncomeRecords(query).stream().filter(p->p.getRecordType()==MainActivity.RECORD_TYPE_EXPENSE).collect(Collectors.toList())));
+                displayExpense.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                displayExpense.setAdapter(adapter);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                displayExpense.removeAllViews();
+
+                adapter=new DisplayExpenseRecordsAdapter(RegisterExpense.this, new ArrayList<Record>(helper.GetSpecificIncomeRecords(newText).stream().filter(p->p.getRecordType()==MainActivity.RECORD_TYPE_EXPENSE).collect(Collectors.toList())));
+                displayExpense.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                displayExpense.setAdapter(adapter);
+
+                return true;
+            }
+        });
+
+
     }
 
     private void registerExpense() {
@@ -90,6 +129,14 @@ public class RegisterExpense extends AppCompatActivity {
         currentDate.setText(GetCurrentdate());
         expenseForWhat.getText().clear();
         //id.setText(currentEventInformation.GetNextID());
+
+        adapter=new DisplayExpenseRecordsAdapter(this,new ArrayList<Record>(currentInformation.getRecord_List().stream().filter(p->p.getRecordType()==MainActivity.RECORD_TYPE_EXPENSE).collect(Collectors.toList())));
+        try {
+            displayExpense.setAdapter(adapter);
+        }
+        catch (Exception e1){
+
+        }
 
 
     }

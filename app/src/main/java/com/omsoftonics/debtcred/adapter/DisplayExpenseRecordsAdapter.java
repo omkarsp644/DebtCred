@@ -8,21 +8,28 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.omsoftonics.debtcred.R;
+import com.omsoftonics.debtcred.model.Record;
+
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static com.omsoftonics.debtcred.MainActivity.currentInformation;
+
 
 public class DisplayExpenseRecordsAdapter extends RecyclerView.Adapter<DisplayExpenseRecordsAdapter.ViewHolder> {
 
     private AppCompatActivity activity;
 
+    private ArrayList<Record> expenseRecords;
 
 
-    public DisplayExpenseRecordsAdapter(AppCompatActivity context) {
+    public DisplayExpenseRecordsAdapter(AppCompatActivity context,ArrayList<Record> expe) {
         this.activity = context;
+        this.expenseRecords=expe;
     }
 
     @NonNull
@@ -39,13 +46,12 @@ public class DisplayExpenseRecordsAdapter extends RecyclerView.Adapter<DisplayEx
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
 
-            position = currentEventInformation.getExpanditures().size() - 1 - position;
+            position = this.expenseRecords.size() - 1 - position;
 
-            currentEventInformation.getExpanditures().get(position).setIndex(position);
-            viewHolder.date.setText(currentEventInformation.getExpanditures().get(position).getDate());
-            viewHolder.expenseBy.setText(currentEventInformation.getExpanditures().get(position).getGivenTo());
-            viewHolder.expenseFor.setText(currentEventInformation.getExpanditures().get(position).getGivenFor());
-            viewHolder.amount.setText(Integer.toString(currentEventInformation.getExpanditures().get(position).getAmount()));
+            this.expenseRecords.get(position).setArrayIndex(position);
+            viewHolder.date.setText(this.expenseRecords.get(position).getDate());
+            viewHolder.expenseFor.setText(this.expenseRecords.get(position).getComment());
+            viewHolder.amount.setText(Integer.toString(this.expenseRecords.get(position).getAmount()));
 
 
         int finalPosition1 = position;
@@ -58,9 +64,10 @@ public class DisplayExpenseRecordsAdapter extends RecyclerView.Adapter<DisplayEx
                     alert.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            currentEventInformation.getExpanditures().get(finalPosition1).RemoveRecord(activity);
-                            currentEventInformation.DeleteExpenseRecord(currentEventInformation.getExpanditures().get(finalPosition1));
-                            currentEventInformation.UpdateRecord(activity);
+
+                            currentInformation.UpdateRecord(expenseRecords.get(finalPosition1));
+                            expenseRecords.get(finalPosition1).RemoveRecord(activity);
+                            currentInformation.DeleteRecord(expenseRecords.get(finalPosition1));
                             notifyDataSetChanged();
 
                         }
@@ -85,11 +92,11 @@ public class DisplayExpenseRecordsAdapter extends RecyclerView.Adapter<DisplayEx
 
     @Override
     public int getItemCount() {
-        if(currentEventInformation.getExpanditures()==null){
+        if(this.expenseRecords==null){
             return 0;
         }
         else {
-            return currentEventInformation.getExpanditures().size();
+            return this.expenseRecords.size();
         }
     }
 
@@ -98,7 +105,6 @@ public class DisplayExpenseRecordsAdapter extends RecyclerView.Adapter<DisplayEx
         private TextView date;
         private TextView expenseFor;
         private TextView amount;
-        private TextView expenseBy;
 
 
         private LinearLayout click;
@@ -107,11 +113,10 @@ public class DisplayExpenseRecordsAdapter extends RecyclerView.Adapter<DisplayEx
 
         public ViewHolder(View v) {
             super(v);
-            date = (TextView) v.findViewById(R.id.display_expense_date);
-            expenseFor = (TextView) v.findViewById(R.id.display_expense_for_what);
-            amount = (TextView) v.findViewById(R.id.display_expense_amount);
-            click=(LinearLayout)v.findViewById(R.id.display_expense_click);
-            expenseBy=(TextView) v.findViewById(R.id.display_expense_personname);
+            date = (TextView) v.findViewById(R.id.record_date);
+            expenseFor = (TextView) v.findViewById(R.id.record_comment);
+            amount = (TextView) v.findViewById(R.id.record_amount);
+            click=(LinearLayout)v.findViewById(R.id.display_click);
         }
     }
 }

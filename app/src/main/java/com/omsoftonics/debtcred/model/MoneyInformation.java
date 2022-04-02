@@ -32,6 +32,12 @@ public class MoneyInformation {
         return Expense_Total;
     }
 
+    public int getBalance() {
+        return Income_Total-Expense_Total;
+    }
+
+
+
     public void setExpense_Total(int expense_Total) {
         Expense_Total = expense_Total;
     }
@@ -69,7 +75,7 @@ public class MoneyInformation {
     }
 
     public void UpdateRecord(Record data) {
-        Record rec= (Record) this.record_List.stream().filter(p->p.getArrayIndex()==data.getArrayIndex()).findFirst().orElse(null);
+        Record rec= (Record) this.record_List.stream().filter(p->p.getDatabaseID()==data.getDatabaseID()).findFirst().orElse(null);
         this.record_List.set(rec.getArrayIndex(),data);
 
 

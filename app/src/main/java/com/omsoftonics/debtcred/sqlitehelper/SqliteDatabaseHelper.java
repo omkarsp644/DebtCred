@@ -30,7 +30,7 @@ public class SqliteDatabaseHelper  extends SQLiteOpenHelper {
 
 
     private static final String ID="ID";
-    private static final String COMMENT="NAME";
+    private static final String COMMENT="COMMENT";
     private static final String DATE="DATE";
     private static final String AMOUNT="AMOUNT";
     private static final String RECORDTYPE="RECORDTYPE";
@@ -41,9 +41,9 @@ public class SqliteDatabaseHelper  extends SQLiteOpenHelper {
 
     private static final String QUERY_TABLE_MONEY_INFO="CREATE TABLE "+MONEY_INFO+" (\n" +
             ID+"   INTEGER PRIMARY KEY AUTOINCREMENT   ,\n" +
-            COMMENT+"   VARCHAR(100) ,\n" +
-            DATE+"   VARCHAR(100) ,\n" +
-            AMOUNT+"   INT" +
+            COMMENT+"   VARCHAR(100) ," +
+            DATE+"   VARCHAR(100) ," +
+            AMOUNT+"   INT," +
             RECORDTYPE+"   INT" +
             ")";
 
@@ -94,7 +94,7 @@ public class SqliteDatabaseHelper  extends SQLiteOpenHelper {
     public MoneyInformation SetupAllInformation(){
         database=this.getReadableDatabase();
 
-        String query="SELECT * FROM "+MONEY_INFO+" ORDER BY "+DATE+" DESC";
+        String query="SELECT rowid as RowID,* FROM "+MONEY_INFO+" ORDER BY "+DATE+" DESC";
         ArrayList<Record> record =new ArrayList<>();
 
         MoneyInformation infor=new MoneyInformation();
@@ -125,7 +125,7 @@ public class SqliteDatabaseHelper  extends SQLiteOpenHelper {
     public ArrayList<Record> GetSpecificIncomeRecords(String s) {
         database=this.getReadableDatabase();
 
-        String query="SELECT * FROM "+QUERY_TABLE_MONEY_INFO+" WHERE "+COMMENT+" LIKE "+" '%"+s+"%' OR "+ID+" LIKE "+" '%"+s+"%'";
+        String query="SELECT * FROM "+MONEY_INFO+" WHERE "+COMMENT+" LIKE "+" '%"+s+"%' OR "+DATE+" LIKE "+" '%"+s+"%' OR "+ID+" LIKE "+" '%"+s+"%'";
         ArrayList<Record> informations=new ArrayList<>();
 
 
@@ -159,8 +159,8 @@ public class SqliteDatabaseHelper  extends SQLiteOpenHelper {
         values.put(DATE,info.getDate());
         values.put(AMOUNT,info.getAmount());
         values.put(COMMENT,info.getComment());
-        values.put(ID,info.getDatabaseID());
         values.put(RECORDTYPE,info.getRecordType());
+        values.put(ID,(getLastRecordID()+1));
 
         return database.insert(MONEY_INFO,null,values);
 
@@ -187,6 +187,23 @@ public class SqliteDatabaseHelper  extends SQLiteOpenHelper {
         database=this.getWritableDatabase();
         database.execSQL("drop table "+MONEY_INFO);
         database.execSQL(QUERY_TABLE_MONEY_INFO);
+    }
+
+    @SuppressLint("Range")
+    public int getLastRecordID(){
+        String s="select count(*) as Count from "+MONEY_INFO;
+
+        Cursor cursor=database.rawQuery(s,null);
+        // cursor.moveToFirst();
+
+        if(cursor.moveToFirst()) {
+            do {
+                Record info = new Record();
+
+               return Integer.parseInt(cursor.getString(cursor.getColumnIndex("Count")));
+            } while (cursor.moveToNext());
+        }
+        return 0;
     }
 
     public void ExportData(Activity context) {

@@ -10,9 +10,9 @@
 
     <color name="gray">#AEA7A7</color>
 
-    <color name="blue">#3961B1</color>
-    <color name="blue1">#728ABA</color>
-    <color name="blue2">#B0B1B3</color>
+    <color name="blue">#18181E</color>
+    <color name="blue1">#262A32</color>
+    <color name="blue2">#2B2D37</color>
     <color name="red">#A26965</color>
 
     <color name="colorPrimary">#9C27B0</color>
@@ -30,5 +30,13 @@
     <color name="print_data_one">#80D36C28</color>
     <color name="print_data_two">#804447DF</color>
     <color name="blueone">#80004FA3</color>
+    <color name="lightblue">#7E95E4</color>
+
+
+    <color name="greenRec">#2ECC71</color>
+    <color name="redRec">#E74C3C</color>
+
+
+    <!--    new Added-->
 
 </resources>
