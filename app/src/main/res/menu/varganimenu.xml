@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/importItem" android:icon="@drawable/imports"
+        android:title="Import Events" />
+    <item android:id="@+id/exportItem" android:icon="@drawable/export"
+        android:title="Export Events" />
+    <item android:id="@+id/help" android:icon="@drawable/help"
+        android:title="Help" />
+
+</menu>

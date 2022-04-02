@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        tools:context=".activity.RegisterExpense">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/expense"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:layout_margin="20sp"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:weightSum="1"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="0sp"
+                android:layout_height="wrap_content"
+                android:hint="Reciept ID"
+                android:visibility="invisible"
+                android:id="@+id/expense_recieptID"
+                android:inputType="number"
+                android:layout_weight="0.5"
+                android:layout_margin="10sp"
+                android:background="@drawable/textview"
+                android:padding="20sp"/>
+
+            <TextView
+                android:layout_width="0sp"
+                android:layout_height="wrap_content"
+                android:hint="Date"
+                android:layout_weight="0.5"
+                android:text="23/09/2021"
+                android:id="@+id/expense_currentDate"
+                android:textSize="20sp"
+                android:layout_margin="10sp"
+                android:background="@drawable/textview"
+                android:padding="20sp"/>
+
+
+        </LinearLayout>
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/expense_forwhat"
+            android:hint="@string/expense_for_what"
+            android:background="@drawable/textview"
+            android:padding="20sp"
+            android:layout_margin="15sp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:id="@+id/expense_amountPaid"
+            android:layout_height="wrap_content"
+            android:hint="@string/amount"
+            android:inputType="number"
+            android:background="@drawable/textview"
+            android:padding="20sp"
+            android:layout_margin="15sp"/>
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_margin="20sp"
+            android:background="@drawable/textview"
+            android:padding="10sp"
+            android:text="@string/add"
+            android:textSize="25sp"
+            android:id="@+id/registerExpense"
+            android:layout_gravity="center"
+            android:gravity="center"/>
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_height="300sp"
+            app:cardElevation="30sp"
+            app:cardCornerRadius="20sp"
+            android:layout_margin="10sp"
+            android:layout_width="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_margin="5sp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:id="@+id/display_expense_date"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textSize="17sp"
+                        android:layout_margin="5sp"
+                        android:text="@string/date"
+                        android:textColor="@color/red"/>
+                    <TextView
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+
+                        android:textSize="17sp"
+                        android:id="@+id/display_expense_for_what"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:layout_margin="5sp"
+                        android:text="@string/expense_for"/>
+                    <TextView
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:textSize="17sp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:id="@+id/display_expense_amount"
+                        android:layout_margin="5sp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@string/amount"/>
+
+
+                </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:id="@+id/displayExpenseRecords"
+                    />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</ScrollView>
