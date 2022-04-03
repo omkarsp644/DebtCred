@@ -5,6 +5,7 @@
     import android.content.DialogInterface;
     import android.content.Intent;
     import android.content.pm.PackageManager;
+    import android.content.res.ColorStateList;
     import android.graphics.Color;
     import android.graphics.Typeface;
     import android.os.Bundle;
@@ -13,6 +14,7 @@
     import android.text.style.RelativeSizeSpan;
     import android.text.style.StyleSpan;
     import android.util.Log;
+    import android.view.MenuItem;
     import android.view.View;
     import android.widget.ImageView;
     import android.widget.LinearLayout;
@@ -28,11 +30,14 @@
     import com.github.mikephil.charting.highlight.Highlight;
     import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
     import com.github.mikephil.charting.utils.ColorTemplate;
+    import com.google.android.material.navigation.NavigationView;
     import com.omsoftonics.debtcred.MainActivity;
     import com.omsoftonics.debtcred.R;
+    import com.omsoftonics.debtcred.helper.BackupDatabase;
     import com.omsoftonics.debtcred.helper.PrintPDFInformation;
     import com.omsoftonics.debtcred.model.MoneyInformation;
     import com.omsoftonics.debtcred.model.Record;
+    import com.omsoftonics.debtcred.sqlitehelper.SqliteDatabaseHelper;
 
     import java.io.IOException;
     import java.text.SimpleDateFormat;
@@ -43,9 +48,12 @@
     import java.util.Map;
     import java.util.TreeMap;
 
+    import androidx.annotation.NonNull;
     import androidx.appcompat.app.AppCompatActivity;
+    import androidx.appcompat.widget.Toolbar;
     import androidx.cardview.widget.CardView;
     import androidx.core.app.ActivityCompat;
+    import androidx.drawerlayout.widget.DrawerLayout;
     import lecho.lib.hellocharts.gesture.ContainerScrollType;
     import lecho.lib.hellocharts.gesture.ZoomType;
     import lecho.lib.hellocharts.listener.LineChartOnValueSelectListener;
@@ -68,7 +76,11 @@
         LinearLayout displayPreviousTransactions;
 
 
+        DrawerLayout drawerView;
+        NavigationView navigationView;
+
         private PieChart chart;
+        SqliteDatabaseHelper helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +95,55 @@
 //        lineChartView.setContainerScrollEnabled(true, ContainerScrollType.HORIZONTAL);
        // InitializeDataForGraphs();
 
+        helper=new SqliteDatabaseHelper(this);
 
 
+
+
+        drawerView=(DrawerLayout) findViewById(R.id.varganiLayout);
+
+        navigationView=(NavigationView)findViewById(R.id.navigationView);
+        navigationView.setItemTextColor(ColorStateList.valueOf(getResources().getColor(R.color.gray)));
+
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.importItem:
+                        BackupDatabase.importDB(Dashboard.this);
+                        currentInformation=helper.SetupAllInformation();
+                        startActivity(getIntent());
+                        finish();
+                        break;
+                    case R.id.exportItem:
+
+                        BackupDatabase.exportDB(Dashboard.this);
+                        break;
+
+                }
+                return true;
+            }
+        });
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                drawerView.openDrawer(navigationView);
+//            }
+//        });
+//
+//        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                switch (item.getItemId()){
+//                    case R.id.rateApp:
+//                        RateMyApp();
+//                        break;
+//                }
+//                return true;
+//            }
+//
+//        });
 
 
     }
@@ -354,7 +413,9 @@
 
         private void ClearData() {
             currentInformation.ResetAllData(this);
-            onBackPressed();
+            currentInformation=helper.SetupAllInformation();
+            startActivity(getIntent());
+            finish();
             Toast.makeText(getApplicationContext(),getResources().getString(R.string.data_removed), Toast.LENGTH_SHORT).show();
         }
 
@@ -380,4 +441,11 @@
             Log.i("PieChart", "nothing selected");
         }
 
+        public void ShowAllTransactions(View view) {
+        startActivity(new Intent(Dashboard.this,DisplayAllTransactions.class));
+        }
+
+        public void openMenu(View view) {
+            drawerView.openDrawer(navigationView);
+        }
     }

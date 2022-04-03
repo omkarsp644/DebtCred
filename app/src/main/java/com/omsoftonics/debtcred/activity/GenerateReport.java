@@ -138,6 +138,8 @@ public class GenerateReport extends AppCompatActivity implements OnChartValueSel
         displayYearWise=(LinearLayout)findViewById(R.id.displayYearWise);
 
         InitializeDayWiseCollection();
+        InitializeMonthWiseCollection();
+        InitializeYearWiseCollection();
 
 
         SetupPieChart();
@@ -486,7 +488,7 @@ public class GenerateReport extends AppCompatActivity implements OnChartValueSel
         ArrayList<ArrayList<Record>> reciepts=new ArrayList<>();
         for (Map.Entry<String, ArrayList<Record>> entry : m1.entrySet())
         {
-            dates.add(er.format(entry.getKey()));
+            dates.add(entry.getKey());
             reciepts.add(entry.getValue());
         }
 

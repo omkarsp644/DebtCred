@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:id="@+id/varganiLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,16 +23,26 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="100"
+                android:weightSum="10"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:layout_margin="10sp"
                 android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="0sp"
+                    android:layout_weight="2"
+                    android:onClick="openMenu"
+                    android:layout_height="30sp"
 
+                    android:foregroundGravity="center"
+                    android:layout_gravity="center"
+                    android:layout_margin="10sp"
+                    android:src="@drawable/menu"
+                    />
 
                 <TextView
                     android:layout_width="0sp"
-                    android:layout_weight="80"
+                    android:layout_weight="6"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:text="DebtCred"
@@ -38,7 +54,7 @@
                     android:textColor="@color/white"/>
                     <ImageView
                         android:layout_width="0sp"
-                        android:layout_weight="20"
+                        android:layout_weight="2"
                         android:onClick="Reset_All"
                         android:layout_height="30sp"
                         android:foregroundGravity="center"
@@ -313,26 +329,7 @@
                 android:weightSum="1"
                 android:layout_margin="5sp"
                 >
-<!--                <androidx.cardview.widget.CardView-->
-<!--                    android:layout_width="0sp"-->
-<!--                    android:layout_weight="0.5"-->
-<!--                    android:layout_margin="15sp"-->
-<!--                    app:cardElevation="10sp"-->
-<!--                    app:cardCornerRadius="20sp"-->
-<!--                    android:layout_height="wrap_content">-->
-<!--                    <TextView-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:drawablePadding="5sp"-->
-<!--                        android:textSize="20sp"-->
-<!--                        android:layout_margin="15sp"-->
-<!--                        android:maxLines="1"-->
-<!--                        android:ellipsize="end"-->
-<!--                        android:drawableTop="@drawable/edit_vargani"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_gravity="center"-->
-<!--                        android:gravity="center"-->
-<!--                        android:text="Search"/>-->
-<!--                </androidx.cardview.widget.CardView>-->
+
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -356,7 +353,48 @@
                         android:text="Analyse your Data"/>
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="1"
+                android:layout_margin="5sp"
+                >
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:layout_margin="15sp"
+                app:cardElevation="10sp"
+                android:onClick="ShowAllTransactions"
+                app:cardCornerRadius="20sp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:drawablePadding="5sp"
+                    android:layout_margin="15sp"
+                    android:textSize="20sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:drawableTop="@drawable/disprec"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="DisplayAllTransactions"/>
+            </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
         </LinearLayout>
 
 </LinearLayout>
 </ScrollView>
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:menu="@menu/varganimenu"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/varganiheader"
+        android:id="@+id/navigationView"
+        >
+    </com.google.android.material.navigation.NavigationView>
+</androidx.drawerlayout.widget.DrawerLayout>

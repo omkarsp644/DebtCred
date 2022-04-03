@@ -25,7 +25,7 @@ import static com.omsoftonics.debtcred.MainActivity.RECORD_TYPE_INCOME;
 
 public class SqliteDatabaseHelper  extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME="DebtCredMoneyManager";
+    public static final String DATABASE_NAME="DebtCredMoneyManager";
     private static final String MONEY_INFO="MONEY_INFORMATION";
 
 
@@ -206,126 +206,6 @@ public class SqliteDatabaseHelper  extends SQLiteOpenHelper {
         return 0;
     }
 
-    public void ExportData(Activity context) {
-        Toast.makeText(context,"Import and Export Functionality will be available soon...", Toast.LENGTH_SHORT).show();
-
-        //+"VarganiBackup_" + GetCurrentdate().replace('/', '_') + ".txt"
-
-//        boolean success = true;
-//        if (!BACKUP_IMPORT_EXPORT.exists())
-//            success = BACKUP_IMPORT_EXPORT.mkdirs();
-//        if (success) {
-//            try {
-//                ArrayList<Record> vargani=GetAllVarganiReciepts();
-//                ArrayList<Expanditures> expanditures=GETAllExpanditures();
-//                ArrayList<EventInformation> events=GetAllEvents();
-//
-//
-//
-//                FileWriter fileWriter=new FileWriter(BACKUP_IMPORT_EXPORT);
-//
-//
-//                fileWriter.write("TABLE 1 STARTED\n");
-//                for (EventInformation e:events){
-//                    fileWriter.append(""+e);
-//                    fileWriter.append("\n");
-//                }
-//
-//
-//
-//                fileWriter.write("\nTABLE 2 STARTED\n");
-//                for (Record e:vargani){
-//                    fileWriter.append(""+e);
-//                    fileWriter.append("\n");
-//                }
-//
-//
-//
-//                fileWriter.write("\nTABLE 3 STARTED\n");
-//                for (Expanditures e:expanditures){
-//                    fileWriter.append(""+e);
-//                    fileWriter.append("\n");
-//                }
-//
-//
-//
-//                fileWriter.flush();
-//                fileWriter.close();
-//
-//                Toast.makeText(context,"Exported...",Toast.LENGTH_SHORT).show();
-//
-//
-//            }
-//            catch (Exception e){
-//                Toast.makeText(context, "Unable to backup database. Retry", Toast.LENGTH_SHORT).show();
-//                e.printStackTrace();
-//            }
-//        }
-
-
-    }
-
-
-    public void ImportData(Activity context) {
-
-        Toast.makeText(context,"Import and Export Functionality will be available soon...", Toast.LENGTH_SHORT).show();
-
-//
-//        File csvFile=BACKUP_IMPORT_EXPORT;
-//
-//
-//        if(!csvFile.exists()){
-//            Toast.makeText(context,"File Doesn't Exist...",Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        int current=0;
-//        try{
-//            CSVReader csvReader=new CSVReader(new FileReader(csvFile.getAbsolutePath()));
-//            String[] nextLine;
-//
-//
-//            while ((nextLine=csvReader.readNext())!=null){
-//                if(!nextLine.equals("")) {
-//                    if (nextLine.equals("TABLE 1 STARTED")) {
-//                        current = 0;
-//                    } else if (nextLine.equals("TABLE 2 STARTED")) {
-//                        current = 1;
-//                    } else if (nextLine.equals("TABLE 3 STARTED")) {
-//                        current = 2;
-//                    }
-//
-//
-//
-//
-//                    if(current==0){
-//
-//                        EventInformation event=new EventInformation();
-//                        event.setDateCreated(nextLine[0]);
-//                        event.seteventName(nextLine[1]);
-//                        event.setEventIncome(Integer.parseInt(nextLine[2]));
-//                        event.setEventExp(Integer.parseInt(nextLine[3]));
-//                        event.setEventPending(Integer.parseInt(nextLine[4]));
-//                        event.SaveRecord(context);
-//
-//                    }
-//                    else if(current==1){
-//
-//                    }
-//                    else if(current==2){
-//
-//                    }
-//
-//                }
-//            }
-//        }
-//        catch (Exception e){
-//
-//        }
-//
-//
-
-    }
 }
 
 

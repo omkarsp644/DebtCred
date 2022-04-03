@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.omsoftonics.debtcred.MainActivity;
 import com.omsoftonics.debtcred.R;
 import com.omsoftonics.debtcred.model.Record;
 
@@ -55,6 +56,13 @@ public class DisplayVarganiRecordsAdapter extends RecyclerView.Adapter<DisplayVa
 
         varganireciepts.get(position).setArrayIndex(position);
 
+        if (this.varganireciepts.get(position).getRecordType()== MainActivity.RECORD_TYPE_INCOME) {
+            viewHolder.click.setBackgroundColor(activity.getResources().getColor(R.color.greenDisplay));
+        }
+        else{
+
+            viewHolder.click.setBackgroundColor(activity.getResources().getColor(R.color.redDisplay));
+        }
 
         viewHolder.name.setText(varganireciepts.get(position).getComment());
         viewHolder.amount.setText(Integer.toString(varganireciepts.get(position).getAmount()));

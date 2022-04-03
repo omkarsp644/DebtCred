@@ -915,7 +915,7 @@ public class PrintPDFInformation {
             tempCanvas.drawText(""+v.getKey(),PAGE_WIDTH/4*0+consts,currentY,titlePaint);
 
 
-            DisplayIncomeExpensePerDay d=df.get(v.getKey());
+            DisplayIncomeExpensePerDay d=dfs.get(v.getKey());
 
             titlePaint.setTextAlign(Paint.Align.CENTER);
             titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF,Typeface.NORMAL));
@@ -1070,7 +1070,7 @@ public class PrintPDFInformation {
             tempCanvas.drawText(""+v.getKey(),PAGE_WIDTH/4*0+consts,currentY,titlePaint);
 
 
-            DisplayIncomeExpensePerDay d=df.get(v.getKey());
+            DisplayIncomeExpensePerDay d=dfs.get(v.getKey());
 
             titlePaint.setTextAlign(Paint.Align.CENTER);
             titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF,Typeface.NORMAL));

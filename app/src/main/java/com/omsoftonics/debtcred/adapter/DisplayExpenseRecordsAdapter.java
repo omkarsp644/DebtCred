@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.omsoftonics.debtcred.MainActivity;
 import com.omsoftonics.debtcred.R;
 import com.omsoftonics.debtcred.model.Record;
 
@@ -49,9 +50,19 @@ public class DisplayExpenseRecordsAdapter extends RecyclerView.Adapter<DisplayEx
             position = this.expenseRecords.size() - 1 - position;
 
             this.expenseRecords.get(position).setArrayIndex(position);
+
+            if (this.expenseRecords.get(position).getRecordType()== MainActivity.RECORD_TYPE_INCOME) {
+                viewHolder.click.setBackgroundColor(activity.getResources().getColor(R.color.greenDisplay));
+            }
+            else{
+
+                viewHolder.click.setBackgroundColor(activity.getResources().getColor(R.color.redDisplay));
+            }
             viewHolder.date.setText(this.expenseRecords.get(position).getDate());
             viewHolder.expenseFor.setText(this.expenseRecords.get(position).getComment());
             viewHolder.amount.setText(Integer.toString(this.expenseRecords.get(position).getAmount()));
+
+
 
 
         int finalPosition1 = position;

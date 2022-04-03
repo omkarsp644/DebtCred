@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static File BACKUP_IMPORT_EXPORT = new File(Environment.getExternalStorageDirectory() + File.separator + "DebtCredManagerBackup/DebtCredManagerfile.csv");
 
-
+    public static String backupDBPath;
     public static int REQUEST_CODE_PERMISSIONS=234;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         SqliteDatabaseHelper helper=new SqliteDatabaseHelper(this);
 
-      currentInformation=helper.SetupAllInformation();
+        backupDBPath = String.format("%s.bak", SqliteDatabaseHelper.DATABASE_NAME);
+
+
+
+        currentInformation=helper.SetupAllInformation();
 
 
         new Thread()
