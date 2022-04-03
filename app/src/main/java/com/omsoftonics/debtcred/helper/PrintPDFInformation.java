@@ -892,7 +892,7 @@ public class PrintPDFInformation {
 
 
 
-        for (Map.Entry<Date, DisplayIncomeExpensePerDay> v : df.entrySet())
+        for (Map.Entry<String, DisplayIncomeExpensePerDay> v : dfs.entrySet())
         {
             if(currentY>=PAGE_HEIGHT-100){
                 currentY=100;
@@ -912,7 +912,7 @@ public class PrintPDFInformation {
             titlePaint.setTextSize(30);
 
             titlePaint.setColor(context.getResources().getColor(R.color.black));
-            tempCanvas.drawText(""+er.format(v.getKey()),PAGE_WIDTH/4*0+consts,currentY,titlePaint);
+            tempCanvas.drawText(""+v.getKey(),PAGE_WIDTH/4*0+consts,currentY,titlePaint);
 
 
             DisplayIncomeExpensePerDay d=df.get(v.getKey());
@@ -1047,7 +1047,7 @@ public class PrintPDFInformation {
 
 
 
-        for (Map.Entry<Date, DisplayIncomeExpensePerDay> v : df.entrySet())
+        for (Map.Entry<String, DisplayIncomeExpensePerDay> v : dfs.entrySet())
         {
             if(currentY>=PAGE_HEIGHT-100){
                 currentY=100;
@@ -1067,7 +1067,7 @@ public class PrintPDFInformation {
             titlePaint.setTextSize(30);
 
             titlePaint.setColor(context.getResources().getColor(R.color.black));
-            tempCanvas.drawText(""+er.format(v.getKey()),PAGE_WIDTH/4*0+consts,currentY,titlePaint);
+            tempCanvas.drawText(""+v.getKey(),PAGE_WIDTH/4*0+consts,currentY,titlePaint);
 
 
             DisplayIncomeExpensePerDay d=df.get(v.getKey());

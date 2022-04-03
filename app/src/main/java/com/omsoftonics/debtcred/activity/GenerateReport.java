@@ -50,7 +50,7 @@ public class GenerateReport extends AppCompatActivity implements OnChartValueSel
 
     TextView incomeReport,expenseReport,pendingReport;
 
-    LinearLayout displayVargani,displayExpense,displayDayWise;
+    LinearLayout displayVargani,displayExpense,displayDayWise,displayMonthWise,displayYearWise;
 
     ScrollView print;
     Bitmap bitmap;
@@ -134,10 +134,11 @@ public class GenerateReport extends AppCompatActivity implements OnChartValueSel
 
 
         displayDayWise=(LinearLayout)findViewById(R.id.displayDayWise);
-
-
+        displayMonthWise=(LinearLayout)findViewById(R.id.displayMonthWise);
+        displayYearWise=(LinearLayout)findViewById(R.id.displayYearWise);
 
         InitializeDayWiseCollection();
+
 
         SetupPieChart();
 
@@ -227,13 +228,13 @@ public class GenerateReport extends AppCompatActivity implements OnChartValueSel
         for (Record v: currentInformation.getRecord_List()) {
             try {
                 //if(v.getRecordType()==MainActivity.RECORD_TYPE_EXPENSE) {
-                    Date d = er.parse(v.getDate());
-                    if (!m.containsKey(d)) {
-                        m.put(d, new ArrayList<>());
-                    }
-                    ArrayList<Record> demo=m.get(d);
-                    demo.add(v);
-                    m.put(d, demo);
+                Date d = er.parse(v.getDate());
+                if (!m.containsKey(d)) {
+                    m.put(d, new ArrayList<>());
+                }
+                ArrayList<Record> demo=m.get(d);
+                demo.add(v);
+                m.put(d, demo);
 
                 //}
             } catch (Exception e) {
@@ -334,6 +335,247 @@ public class GenerateReport extends AppCompatActivity implements OnChartValueSel
             v.setBackgroundColor(Color.parseColor("#B3B3B3"));
 
             displayDayWise.addView(v);
+
+        }
+
+
+    }
+
+    private void InitializeMonthWiseCollection() {
+        Map<String, ArrayList<Record>> m = new HashMap<String, ArrayList<Record>>();
+        //SimpleDateFormat er = new SimpleDateFormat("dd/MM/yyyy");
+        for (Record v: currentInformation.getRecord_List()) {
+            try {
+                //if(v.getRecordType()==MainActivity.RECORD_TYPE_EXPENSE) {
+//                Date d = er.parse(v.getDate());
+
+                String d=v.getDate().split("/")[1]+"-"+v.getDate().split("/")[2];
+                if (!m.containsKey(d)) {
+                    m.put(d, new ArrayList<>());
+                }
+                ArrayList<Record> demo=m.get(d);
+                demo.add(v);
+                m.put(d, demo);
+
+                //}
+            } catch (Exception e) {
+            }
+        }
+        Map<String, ArrayList<Record>> m1 = new TreeMap(m);
+        ArrayList<String> dates=new ArrayList<>();
+        ArrayList<ArrayList<Record>> reciepts=new ArrayList<>();
+        for (Map.Entry<String, ArrayList<Record>> entry : m1.entrySet())
+        {
+            dates.add(entry.getKey());
+            reciepts.add(entry.getValue());
+        }
+
+        for (int i=0;i<dates.size();i++){
+
+
+            int totalincome=0;
+            int totalexpense=0;
+            String date=dates.get(i);
+
+            ArrayList<Record> v11=reciepts.get(i);
+
+            View dateBox=getLayoutInflater().inflate(R.layout.textboxlayout,null,false);
+            TextView dat=(TextView)dateBox.findViewById(R.id.DateDisplay);
+            dat.setText(date);
+            displayMonthWise.addView(dateBox);
+
+
+            View header=getLayoutInflater().inflate(R.layout.vargani_headers,null,false);
+            displayMonthWise.addView(header);
+
+            for (Record v:v11){
+
+                View view=getLayoutInflater().inflate(R.layout.display_expense,null,false);
+
+                LinearLayout d=view.findViewById(R.id.display_click);
+
+
+                if(v.getRecordType()==MainActivity.RECORD_TYPE_EXPENSE){
+
+                    totalexpense+=v.getAmount();
+                    d.setBackgroundColor(getResources().getColor(R.color.redDisplay));
+
+                    TextView j=(TextView)view.findViewById(R.id.record_date);
+                    j.setText(v.getDate());
+
+                    TextView k=(TextView)view.findViewById(R.id.record_comment);
+                    k.setText(v.getComment());
+
+                    TextView l=(TextView)view.findViewById(R.id.record_amount);
+                    l.setText(""+v.getAmount());
+
+
+                    displayMonthWise.addView(view);
+                }
+                else{
+                    totalincome+=v.getAmount();
+                    d.setBackgroundColor(getResources().getColor(R.color.greenDisplay));
+
+                    TextView j=(TextView)view.findViewById(R.id.record_date);
+                    j.setText(v.getDate());
+
+                    TextView k=(TextView)view.findViewById(R.id.record_comment);
+                    k.setText(v.getComment());
+
+                    TextView l=(TextView)view.findViewById(R.id.record_amount);
+                    l.setText(""+v.getAmount());
+
+
+                    displayMonthWise.addView(view);
+                }
+            }
+
+            View amount=getLayoutInflater().inflate(R.layout.textboxlayout,null,false);
+            TextView amt=(TextView)amount.findViewById(R.id.DateDisplay);
+            amt.setTextSize(20);
+            amt.setText("Expense : "+totalexpense);
+
+
+            View amount1=getLayoutInflater().inflate(R.layout.textboxlayout,null,false);
+            TextView amt1=(TextView)amount1.findViewById(R.id.DateDisplay);
+            amt1.setTextSize(20);
+            amt1.setText("Income : "+totalincome);
+
+            //
+
+            displayMonthWise.addView(amount);
+            displayMonthWise.addView(amount1);
+
+
+
+            View v = new View(this);
+            v.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    5
+            ));
+            v.setBackgroundColor(Color.parseColor("#B3B3B3"));
+
+            displayMonthWise.addView(v);
+
+        }
+
+
+    }
+
+    private void InitializeYearWiseCollection() {
+        Map<String, ArrayList<Record>> m = new HashMap<String, ArrayList<Record>>();
+        SimpleDateFormat er = new SimpleDateFormat("dd/MM/yyyy");
+        for (Record v: currentInformation.getRecord_List()) {
+            try {
+                //if(v.getRecordType()==MainActivity.RECORD_TYPE_EXPENSE) {
+//                Date d = er.parse(v.getDate());
+                String s=v.getDate().split("/")[2];
+                if (!m.containsKey(s)) {
+                    m.put(s, new ArrayList<>());
+                }
+                ArrayList<Record> demo=m.get(s);
+                demo.add(v);
+                m.put(s, demo);
+
+                //}
+            } catch (Exception e) {
+            }
+        }
+        Map<String, ArrayList<Record>> m1 = new TreeMap(m);
+        ArrayList<String> dates=new ArrayList<>();
+        ArrayList<ArrayList<Record>> reciepts=new ArrayList<>();
+        for (Map.Entry<String, ArrayList<Record>> entry : m1.entrySet())
+        {
+            dates.add(er.format(entry.getKey()));
+            reciepts.add(entry.getValue());
+        }
+
+        for (int i=0;i<dates.size();i++){
+
+
+            int totalincome=0;
+            int totalexpense=0;
+            String date=dates.get(i);
+
+            ArrayList<Record> v11=reciepts.get(i);
+
+            View dateBox=getLayoutInflater().inflate(R.layout.textboxlayout,null,false);
+            TextView dat=(TextView)dateBox.findViewById(R.id.DateDisplay);
+            dat.setText(date);
+            displayYearWise.addView(dateBox);
+
+
+            View header=getLayoutInflater().inflate(R.layout.vargani_headers,null,false);
+            displayYearWise.addView(header);
+
+            for (Record v:v11){
+
+                View view=getLayoutInflater().inflate(R.layout.display_expense,null,false);
+
+                LinearLayout d=view.findViewById(R.id.display_click);
+
+
+                if(v.getRecordType()==MainActivity.RECORD_TYPE_EXPENSE){
+
+                    totalexpense+=v.getAmount();
+                    d.setBackgroundColor(getResources().getColor(R.color.redDisplay));
+
+                    TextView j=(TextView)view.findViewById(R.id.record_date);
+                    j.setText(v.getDate());
+
+                    TextView k=(TextView)view.findViewById(R.id.record_comment);
+                    k.setText(v.getComment());
+
+                    TextView l=(TextView)view.findViewById(R.id.record_amount);
+                    l.setText(""+v.getAmount());
+
+
+                    displayYearWise.addView(view);
+                }
+                else{
+                    totalincome+=v.getAmount();
+                    d.setBackgroundColor(getResources().getColor(R.color.greenDisplay));
+
+                    TextView j=(TextView)view.findViewById(R.id.record_date);
+                    j.setText(v.getDate());
+
+                    TextView k=(TextView)view.findViewById(R.id.record_comment);
+                    k.setText(v.getComment());
+
+                    TextView l=(TextView)view.findViewById(R.id.record_amount);
+                    l.setText(""+v.getAmount());
+
+
+                    displayYearWise.addView(view);
+                }
+            }
+
+            View amount=getLayoutInflater().inflate(R.layout.textboxlayout,null,false);
+            TextView amt=(TextView)amount.findViewById(R.id.DateDisplay);
+            amt.setTextSize(20);
+            amt.setText("Expense : "+totalexpense);
+
+
+            View amount1=getLayoutInflater().inflate(R.layout.textboxlayout,null,false);
+            TextView amt1=(TextView)amount1.findViewById(R.id.DateDisplay);
+            amt1.setTextSize(20);
+            amt1.setText("Income : "+totalincome);
+
+            //
+
+            displayYearWise.addView(amount);
+            displayYearWise.addView(amount1);
+
+
+
+            View v = new View(this);
+            v.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    5
+            ));
+            v.setBackgroundColor(Color.parseColor("#B3B3B3"));
+
+            displayYearWise.addView(v);
 
         }
 
