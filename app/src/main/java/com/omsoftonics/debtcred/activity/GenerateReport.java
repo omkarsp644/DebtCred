@@ -11,6 +11,14 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.omsoftonics.debtcred.MainActivity;
 import com.omsoftonics.debtcred.R;
 import com.omsoftonics.debtcred.model.Record;
@@ -22,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import androidx.appcompat.app.AppCompatActivity;
 import lecho.lib.hellocharts.gesture.ContainerScrollType;
@@ -37,7 +46,7 @@ import lecho.lib.hellocharts.view.LineChartView;
 import static com.omsoftonics.debtcred.MainActivity.currentInformation;
 
 
-public class GenerateReport extends AppCompatActivity {
+public class GenerateReport extends AppCompatActivity implements OnChartValueSelectedListener {
 
     TextView incomeReport,expenseReport,pendingReport;
 
@@ -46,297 +55,299 @@ public class GenerateReport extends AppCompatActivity {
     ScrollView print;
     Bitmap bitmap;
 
-    LineChartView lineChartView ;
+   //LineChartView lineChartView ;'
+   private PieChart chart;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_generate_report);
-//
-//        lineChartView = findViewById(R.id.eventLineChartDash);
-//
-//    }
-//
-//
-//
-//    public static Bitmap getBitmapFromView(View view) {
-//        //Define a bitmap with the same size as the view
-//        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
-//        //Bind a canvas to it
-//        Canvas canvas = new Canvas(returnedBitmap);
-//        //Get the view's background
-//        Drawable bgDrawable =view.getBackground();
-//        if (bgDrawable!=null)
-//            //has background drawable, then draw it on the canvas
-//            bgDrawable.draw(canvas);
-//        else
-//            //does not have background drawable, then draw white background on the canvas
-//            canvas.drawColor(Color.WHITE);
-//        // draw the view on the canvas
-//        view.draw(canvas);
-//        //return the bitmap
-//        return returnedBitmap;
-//    }
-//
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//
-//        incomeReport=(TextView)findViewById(R.id.incomeAnalysis);
-//        expenseReport=(TextView)findViewById(R.id.expenseAnalysis);
-//        pendingReport=(TextView)findViewById(R.id.pendingAnalysis);
-//
-//        displayExpense=(LinearLayout)findViewById(R.id.displayExpenseReport);
-//        displayVargani=(LinearLayout)findViewById(R.id.displayVarganiReport);
-//
-//
-//
-//
-//
-//        incomeReport.setText(Integer.toString(currentInformation.getIncome_Total()));
-//        expenseReport.setText(Integer.toString(currentInformation.getExpense_Total()));
-//
-//
-//        displayVargani.removeAllViews();
-//        int count=1;
-//        for (Record v : currentInformation.getRecord_List()){
-//            View view=getLayoutInflater().inflate(R.layout.display_vargani_items,null,false);
-//
-//            LinearLayout d=view.findViewById(R.id.clickItem);
-//
-//            boolean isExp=true;
-//            if(v.getRecordType()== MainActivity.RECORD_TYPE_EXPENSE){
-//                d.setBackgroundColor(getResources().getColor(R.color.redDisplay));
-//                isExp=true;
-//            }
-//            else{
-//
-//                isExp=false;
-//                d.setBackgroundColor(getResources().getColor(R.color.greenDisplay));
-//            }
-//            TextView i=(TextView)view.findViewById(R.id.reciept_ID);
-//            i.setText(Integer.toString(v.getDatabaseID()));
-//
-//            TextView j=(TextView)view.findViewById(R.id.reciept_comment);
-//            j.setText(v.getComment());
-//
-//            TextView k=(TextView)view.findViewById(R.id.reciept_date);
-//            k.setText(v.getDate());
-//
-//            TextView l=(TextView)view.findViewById(R.id.reciept_income);
-//            l.setText(""+(isExp?v.getAmount():0));
-//
-//            TextView m=(TextView)view.findViewById(R.id.reciept_expense);
-//            m.setText(""+(isExp?v.getAmount():0));
-//            displayVargani.addView(view);
-//        }
-//
-//
-//        displayExpense.removeAllViews();
-//        displayExpense.setVisibility(View.GONE);
-////        for (Expanditures v : currentEventInformation.getExpanditures()){
-////            View view=getLayoutInflater().inflate(R.layout.display_expense,null,false);
-////
-////            TextView i=(TextView)view.findViewById(R.id.display_expense_date);
-////            i.setText(v.getDate());
-////
-////            TextView j=(TextView)view.findViewById(R.id.display_expense_for_what);
-////            j.setText(v.getGivenFor());
-////
-////            TextView k=(TextView)view.findViewById(R.id.display_expense_amount);
-////            k.setText(Integer.toString(v.getAmount()));
-////
-////            TextView l=(TextView)view.findViewById(R.id.display_expense_personname);
-////            l.setText(v.getGivenTo());
-////            displayExpense.addView(view);
-////        }
-//
-//
-//       // InitializeDataForGraphs();
-//
-//
-//
-//        displayDayWise=(LinearLayout)findViewById(R.id.displayDayWise);
-//
-//
-//
-//        InitializeDayWiseCollection();
-//
-//
-//    }
-//
-//    private void InitializeDayWiseCollection() {
-//        Map<Date, ArrayList<Record>> m = new HashMap<Date, ArrayList<Record>>();
-//        SimpleDateFormat er = new SimpleDateFormat("dd/MM/yyyy");
-//        for (Record v: currentInformation.getRecord_List()) {
-//            try {
-//                if(v.getRecordType()==MainActivity.RECORD_TYPE_EXPENSE) {
-//                    Date d = er.parse(v.getDate());
-//                    if (!m.containsKey(d)) {
-//                        m.put(d, new ArrayList<>());
-//                    }
-//                    ArrayList<Record> demo=m.get(d);
-//                    demo.add(v);
-//                    m.put(d, demo);
-//
-//                }
-//            } catch (Exception e) {
-//            }
-//        }
-//        Map<Date, ArrayList<Record>> m1 = new TreeMap(m);
-//        ArrayList<String> dates=new ArrayList<>();
-//        ArrayList<ArrayList<Record>> reciepts=new ArrayList<>();
-//        for (Map.Entry<Date, ArrayList<Record>> entry : m1.entrySet())
-//        {
-//            dates.add(er.format(entry.getKey()));
-//            reciepts.add(entry.getValue());
-//        }
-//
-//        for (int i=0;i<dates.size();i++){
-//
-//
-//            int totalCollection=0;
-//            String date=dates.get(i);
-//
-//            ArrayList<Record> v11=reciepts.get(i);
-//
-//            View dateBox=getLayoutInflater().inflate(R.layout.textboxlayout,null,false);
-//            TextView dat=(TextView)dateBox.findViewById(R.id.DateDisplay);
-//            dat.setText(date);
-//            displayDayWise.addView(dateBox);
-//
-//
-//            View header=getLayoutInflater().inflate(R.layout.vargani_headers,null,false);
-//            displayDayWise.addView(header);
-//
-//            for (Record v:v11){
-//
-//                totalCollection+=v.getAmount();
-//                View view=getLayoutInflater().inflate(R.layout.display_vargani_items,null,false);
-//
-//                LinearLayout d=view.findViewById(R.id.clickItem);
-//
-//
-//                if(v.getRecordType()==MainActivity.RECORD_TYPE_EXPENSE){
-//                    d.setBackgroundColor(getResources().getColor(R.color.redDisplay));
-//
-//                    TextView i1=(TextView)view.findViewById(R.id.reciept_ID);
-//                    i1.setText(Integer.toString(v.getDatabaseID()));
-//
-//                    TextView j=(TextView)view.findViewById(R.id.reciept_comment);
-//                    j.setText(v.getComment());
-//
-//                    TextView k=(TextView)view.findViewById(R.id.reciept_date);
-//                    k.setText(Integer.toString(v.getAmount()));
-//
-//                    TextView l=(TextView)view.findViewById(R.id.reciept_income);
-//                    l.setText(0);
-//
-//                    TextView m11=(TextView)view.findViewById(R.id.reciept_expense);
-//                    m11.setText(v.getAmount());
-//
-//
-//
-//                    displayDayWise.addView(view);
-//                }
-//            }
-//
-//            View amount=getLayoutInflater().inflate(R.layout.textboxlayout,null,false);
-//            TextView amt=(TextView)amount.findViewById(R.id.DateDisplay);
-//            amt.setTextSize(20);
-//            amt.setText("Collected : "+totalCollection);
-//
-//            displayDayWise.addView(amount);
-//
-//
-//            View v = new View(this);
-//            v.setLayoutParams(new LinearLayout.LayoutParams(
-//                    LinearLayout.LayoutParams.MATCH_PARENT,
-//                    5
-//            ));
-//            v.setBackgroundColor(Color.parseColor("#B3B3B3"));
-//
-//            displayDayWise.addView(v);
-//
-//        }
-//
-//
-//    }
-//
-////    private void InitializeDataForGraphs() {
-////        lineChartView = findViewById(R.id.chartVarganiReport);
-////
-////        lineChartView.setOnValueTouchListener(this);
-////        lineChartView.setInteractive(true);
-////        lineChartView.setZoomType(ZoomType.HORIZONTAL);
-////        lineChartView.setPadding(50,10,50,10);
-////        lineChartView.setContainerScrollEnabled(true, ContainerScrollType.HORIZONTAL);
-////
-////
-////
-////
-////        Map<Date, Integer> m = new HashMap<Date, Integer>();
-////        SimpleDateFormat er = new SimpleDateFormat("dd/MM/yyyy");
-////        for (Record v: currentEventInformation.getVarganiList()) {
-////            try {
-////                Date d=er.parse(v.getDateCreated());
-////                if(!m.containsKey(d)){
-////                    m.put( d, 0);
-////                }
-////                m.put( d, m.get(d) + v.getAmount());
-////            } catch (Exception e) {
-////            }
-////        }
-////        Map<Date, Integer> m1 = new TreeMap(m);
-////        ArrayList<String> xAxis=new ArrayList<>();
-////        ArrayList<Integer> yAxis=new ArrayList<>();
-////        for (Map.Entry<Date, Integer> entry : m1.entrySet())
-////        {
-////            xAxis.add(er.format(entry.getKey()));
-////            yAxis.add(entry.getValue());
-////        }
-////
-////
-////        CreateGraph(xAxis.toArray(new String[0]),yAxis.toArray(new Integer[0]));
-////
-////    }
-//
-////    private void CreateGraph(String[] axisData, Integer[] yAxisData) {
-////        List yAxisValues = new ArrayList();
-////        List axisValues = new ArrayList();
-////        Line line = new Line(yAxisValues);
-////        for(int i = 0; i < axisData.length; i++){
-////            axisValues.add(i, new AxisValue(i).setLabel(axisData[i]));
-////        }
-////        for (int i = 0; i < yAxisData.length; i++){
-////            yAxisValues.add(new PointValue(i, yAxisData[i]));
-////        }
-////        List lines = new ArrayList();
-////        lines.add(line);
-////        LineChartData data = new LineChartData();
-////        data.setLines(lines);
-////        lineChartView.setLineChartData(data);
-////        Axis axis = new Axis();
-////        axis.setValues(axisValues);
-////        axis.setTextColor(getResources().getColor(android.R.color.black));
-////        axis.setTextSize(10);
-////
-////        Axis yAxis = new Axis();
-////        yAxis.setTextSize(10);
-////        yAxis.setTextColor(getResources().getColor(android.R.color.black));
-////        data.setAxisYLeft(yAxis);
-////
-////        data.setAxisXBottom(axis);
-////
-////    }
-//
-//    @Override
-//    public void onValueSelected(int lineIndex, int pointIndex, PointValue value) {
-//        Toast.makeText(getApplicationContext(),""+value.getY(), Toast.LENGTH_SHORT).show();
-//    }
-//
-//    @Override
-//    public void onValueDeselected() {
-//
-//    }
+
+
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        incomeReport=(TextView)findViewById(R.id.incomeAnalysis);
+        expenseReport=(TextView)findViewById(R.id.expenseAnalysis);
+        pendingReport=(TextView)findViewById(R.id.balancemoney);
+
+        displayExpense=(LinearLayout)findViewById(R.id.displayExpenseReport);
+        displayVargani=(LinearLayout)findViewById(R.id.displayVarganiReport);
+
+
+
+
+
+        incomeReport.setText(Integer.toString(currentInformation.getIncome_Total()));
+        expenseReport.setText(Integer.toString(currentInformation.getExpense_Total()));
+        pendingReport.setText(""+(currentInformation.getIncome_Total()-currentInformation.getExpense_Total()));
+
+        displayVargani.removeAllViews();
+        int count=1;
+        for (Record v : new ArrayList<Record>(currentInformation.getRecord_List().stream().filter(p->p.getRecordType()==MainActivity.RECORD_TYPE_INCOME).collect(Collectors.toList()))){
+            View view=getLayoutInflater().inflate(R.layout.display_expense,null,false);
+
+            LinearLayout d=view.findViewById(R.id.display_click);
+
+
+                d.setBackgroundColor(getResources().getColor(R.color.greenDisplay));
+
+            TextView j=(TextView)view.findViewById(R.id.record_date);
+            j.setText(v.getDate());
+
+            TextView k=(TextView)view.findViewById(R.id.record_comment);
+            k.setText(v.getComment());
+
+            TextView l=(TextView)view.findViewById(R.id.record_amount);
+            l.setText(""+v.getAmount());
+
+            displayVargani.addView(view);
+        }
+
+
+        displayExpense.removeAllViews();
+        //displayExpense.setVisibility(View.GONE);
+        for (Record v : new ArrayList<Record>(currentInformation.getRecord_List().stream().filter(p->p.getRecordType()==MainActivity.RECORD_TYPE_EXPENSE).collect(Collectors.toList()))){
+            View view=getLayoutInflater().inflate(R.layout.display_expense,null,false);
+
+            LinearLayout d=view.findViewById(R.id.display_click);
+
+
+            d.setBackgroundColor(getResources().getColor(R.color.redDisplay));
+
+            TextView j=(TextView)view.findViewById(R.id.record_date);
+            j.setText(v.getDate());
+
+            TextView k=(TextView)view.findViewById(R.id.record_comment);
+            k.setText(v.getComment());
+
+            TextView l=(TextView)view.findViewById(R.id.record_amount);
+            l.setText(""+v.getAmount());
+            displayExpense.addView(view);
+        }
+
+
+       // InitializeDataForGraphs();
+
+
+
+        displayDayWise=(LinearLayout)findViewById(R.id.displayDayWise);
+
+
+
+        InitializeDayWiseCollection();
+
+        SetupPieChart();
+
+
+    }
+
+
+
+
+    private void SetupPieChart() {
+        chart = findViewById(R.id.chart1);
+        chart.setUsePercentValues(true);
+        chart.getDescription().setEnabled(false);
+        chart.setExtraOffsets(5, 10, 5, 5);
+
+        chart.setDragDecelerationFrictionCoef(0.95f);
+
+
+        chart.setDrawHoleEnabled(true);
+        chart.setHoleColor(Color.WHITE);
+
+        chart.setTransparentCircleColor(Color.WHITE);
+        chart.setTransparentCircleAlpha(110);
+
+        chart.setHoleRadius(50f);
+        chart.setTransparentCircleRadius(50f);
+
+        chart.setDrawCenterText(true);
+
+        chart.setRotationAngle(0);
+        chart.setRotationEnabled(true);
+        chart.setHighlightPerTapEnabled(true);
+
+        //chart.setUnit(" ");
+        // chart.setDrawUnitsInChart(true);
+
+        // add a selection listener
+        chart.setOnChartValueSelectedListener(this);
+
+        showPieChart();
+
+    }
+
+    private void showPieChart(){
+
+        ArrayList<PieEntry> pieEntries = new ArrayList<>();
+        String label = "Debt Cred";
+
+        //initializing data
+        Map<String, Integer> typeAmountMap = new HashMap<>();
+        typeAmountMap.put("Income",currentInformation.getIncome_Total());
+        typeAmountMap.put("Expense",currentInformation.getExpense_Total());
+        typeAmountMap.put("Savings",currentInformation.getIncome_Total()-currentInformation.getExpense_Total());
+
+        //initializing colors for the entries
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(Color.parseColor("#0b2d39"));
+        colors.add(Color.parseColor("#be4d25"));
+        colors.add(Color.parseColor("#2596be"));
+
+
+        //input data and fit data into pie chart entry
+        for(String type: typeAmountMap.keySet()){
+            pieEntries.add(new PieEntry(typeAmountMap.get(type).floatValue(), type));
+        }
+
+        //collecting the entries with label name
+        PieDataSet pieDataSet = new PieDataSet(pieEntries,label);
+        //setting text size of the value
+        pieDataSet.setValueTextSize(10f);
+        //providing color list for coloring different entries
+        pieDataSet.setColors(colors);
+        //grouping the data set from entry to chart
+        PieData pieData = new PieData(pieDataSet);
+        //showing the value of the entries, default true if not set
+        pieData.setDrawValues(true);
+        pieData.setValueFormatter(new PercentFormatter());
+
+        chart.setData(pieData);
+        chart.invalidate();
+    }
+    //https://www.codingdemos.com/
+
+    private void InitializeDayWiseCollection() {
+        Map<Date, ArrayList<Record>> m = new HashMap<Date, ArrayList<Record>>();
+        SimpleDateFormat er = new SimpleDateFormat("dd/MM/yyyy");
+        for (Record v: currentInformation.getRecord_List()) {
+            try {
+                //if(v.getRecordType()==MainActivity.RECORD_TYPE_EXPENSE) {
+                    Date d = er.parse(v.getDate());
+                    if (!m.containsKey(d)) {
+                        m.put(d, new ArrayList<>());
+                    }
+                    ArrayList<Record> demo=m.get(d);
+                    demo.add(v);
+                    m.put(d, demo);
+
+                //}
+            } catch (Exception e) {
+            }
+        }
+        Map<Date, ArrayList<Record>> m1 = new TreeMap(m);
+        ArrayList<String> dates=new ArrayList<>();
+        ArrayList<ArrayList<Record>> reciepts=new ArrayList<>();
+        for (Map.Entry<Date, ArrayList<Record>> entry : m1.entrySet())
+        {
+            dates.add(er.format(entry.getKey()));
+            reciepts.add(entry.getValue());
+        }
+
+        for (int i=0;i<dates.size();i++){
+
+
+            int totalincome=0;
+            int totalexpense=0;
+            String date=dates.get(i);
+
+            ArrayList<Record> v11=reciepts.get(i);
+
+            View dateBox=getLayoutInflater().inflate(R.layout.textboxlayout,null,false);
+            TextView dat=(TextView)dateBox.findViewById(R.id.DateDisplay);
+            dat.setText(date);
+            displayDayWise.addView(dateBox);
+
+
+            View header=getLayoutInflater().inflate(R.layout.vargani_headers,null,false);
+            displayDayWise.addView(header);
+
+            for (Record v:v11){
+
+                View view=getLayoutInflater().inflate(R.layout.display_expense,null,false);
+
+                LinearLayout d=view.findViewById(R.id.display_click);
+
+
+                if(v.getRecordType()==MainActivity.RECORD_TYPE_EXPENSE){
+
+                    totalexpense+=v.getAmount();
+                    d.setBackgroundColor(getResources().getColor(R.color.redDisplay));
+
+                    TextView j=(TextView)view.findViewById(R.id.record_date);
+                    j.setText(v.getDate());
+
+                    TextView k=(TextView)view.findViewById(R.id.record_comment);
+                    k.setText(v.getComment());
+
+                    TextView l=(TextView)view.findViewById(R.id.record_amount);
+                    l.setText(""+v.getAmount());
+
+
+                    displayDayWise.addView(view);
+                }
+                else{
+                    totalincome+=v.getAmount();
+                    d.setBackgroundColor(getResources().getColor(R.color.greenDisplay));
+
+                    TextView j=(TextView)view.findViewById(R.id.record_date);
+                    j.setText(v.getDate());
+
+                    TextView k=(TextView)view.findViewById(R.id.record_comment);
+                    k.setText(v.getComment());
+
+                    TextView l=(TextView)view.findViewById(R.id.record_amount);
+                    l.setText(""+v.getAmount());
+
+
+                    displayDayWise.addView(view);
+                }
+            }
+
+            View amount=getLayoutInflater().inflate(R.layout.textboxlayout,null,false);
+            TextView amt=(TextView)amount.findViewById(R.id.DateDisplay);
+            amt.setTextSize(20);
+            amt.setText("Expense : "+totalexpense);
+
+
+            View amount1=getLayoutInflater().inflate(R.layout.textboxlayout,null,false);
+            TextView amt1=(TextView)amount1.findViewById(R.id.DateDisplay);
+            amt1.setTextSize(20);
+            amt1.setText("Income : "+totalincome);
+
+            //
+
+            displayDayWise.addView(amount);
+            displayDayWise.addView(amount1);
+
+
+
+            View v = new View(this);
+            v.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    5
+            ));
+            v.setBackgroundColor(Color.parseColor("#B3B3B3"));
+
+            displayDayWise.addView(v);
+
+        }
+
+
+    }
+
+
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+
+    }
+
+    @Override
+    public void onNothingSelected() {
+
     }
 }

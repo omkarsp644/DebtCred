@@ -15,10 +15,10 @@
     <string name="amount">Amount</string>
     <string name="balance">Balance</string>
     <string name="pending">Pending</string>
-    <string name="vargani_balance">Vargani Balance</string>
+    <string name="vargani_balance">Income</string>
     <string name="expanditure">Expense</string>
-    <string name="pending_vargani">Pending Vargani</string>
-    <string name="vargani_list">Vargani List</string>
+    <string name="pending_vargani">Balance</string>
+    <string name="vargani_list">Income List</string>
     <string name="date">Date</string>
     <string name="paiddate">Paiddate</string>
     <string name="expense_list">Expense List</string>
