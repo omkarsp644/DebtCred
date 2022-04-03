@@ -5,13 +5,29 @@
     import android.content.DialogInterface;
     import android.content.Intent;
     import android.content.pm.PackageManager;
+    import android.graphics.Color;
+    import android.graphics.Typeface;
     import android.os.Bundle;
+    import android.text.SpannableString;
+    import android.text.style.ForegroundColorSpan;
+    import android.text.style.RelativeSizeSpan;
+    import android.text.style.StyleSpan;
+    import android.util.Log;
     import android.view.View;
     import android.widget.ImageView;
     import android.widget.LinearLayout;
     import android.widget.TextView;
     import android.widget.Toast;
 
+    import com.github.mikephil.charting.charts.PieChart;
+    import com.github.mikephil.charting.data.Entry;
+    import com.github.mikephil.charting.data.PieData;
+    import com.github.mikephil.charting.data.PieDataSet;
+    import com.github.mikephil.charting.data.PieEntry;
+    import com.github.mikephil.charting.formatter.PercentFormatter;
+    import com.github.mikephil.charting.highlight.Highlight;
+    import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+    import com.github.mikephil.charting.utils.ColorTemplate;
     import com.omsoftonics.debtcred.MainActivity;
     import com.omsoftonics.debtcred.R;
     import com.omsoftonics.debtcred.helper.PrintPDFInformation;
@@ -43,25 +59,30 @@
     import static com.omsoftonics.debtcred.MainActivity.currentInformation;
 
 
-    public class Dashboard extends AppCompatActivity implements LineChartOnValueSelectListener {
+    public class Dashboard extends AppCompatActivity implements LineChartOnValueSelectListener, OnChartValueSelectedListener {
 
 
-        LineChartView lineChartView ;
+//        LineChartView lineChartView ;
         TextView eventName,income,expense,balance;
         CardView printData;
         LinearLayout displayPreviousTransactions;
+
+
+        private PieChart chart;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        lineChartView = findViewById(R.id.eventLineChartDash);
-        lineChartView.setOnValueTouchListener(this);
-        lineChartView.setInteractive(true);
-        lineChartView.setZoomType(ZoomType.HORIZONTAL);
-        lineChartView.setPadding(50,10,50,10);
-        lineChartView.setContainerScrollEnabled(true, ContainerScrollType.HORIZONTAL);
+//        lineChartView = findViewById(R.id.eventLineChartDash);
+//        lineChartView.setOnValueTouchListener(this);
+//        lineChartView.setInteractive(true);
+//        lineChartView.setZoomType(ZoomType.HORIZONTAL);
+//        lineChartView.setPadding(50,10,50,10);
+//        lineChartView.setContainerScrollEnabled(true, ContainerScrollType.HORIZONTAL);
        // InitializeDataForGraphs();
+
 
 
 
@@ -128,6 +149,8 @@
 
                 displayPreviousTransactions.addView(v);
 
+                SetupPieChart();
+
             }
 
 
@@ -152,6 +175,81 @@
             });
 
         }
+
+
+
+        private void SetupPieChart() {
+            chart = findViewById(R.id.chart1);
+            chart.setUsePercentValues(true);
+            chart.getDescription().setEnabled(false);
+            chart.setExtraOffsets(5, 10, 5, 5);
+
+            chart.setDragDecelerationFrictionCoef(0.95f);
+
+
+            chart.setDrawHoleEnabled(true);
+            chart.setHoleColor(Color.WHITE);
+
+            chart.setTransparentCircleColor(Color.WHITE);
+            chart.setTransparentCircleAlpha(110);
+
+            chart.setHoleRadius(50f);
+            chart.setTransparentCircleRadius(50f);
+
+            chart.setDrawCenterText(true);
+
+            chart.setRotationAngle(0);
+            chart.setRotationEnabled(true);
+            chart.setHighlightPerTapEnabled(true);
+
+            //chart.setUnit(" ");
+            // chart.setDrawUnitsInChart(true);
+
+            // add a selection listener
+            chart.setOnChartValueSelectedListener(this);
+
+            showPieChart();
+
+        }
+
+        private void showPieChart(){
+
+            ArrayList<PieEntry> pieEntries = new ArrayList<>();
+            String label = "Debt Cred";
+
+            //initializing data
+            Map<String, Integer> typeAmountMap = new HashMap<>();
+            typeAmountMap.put("Income",currentInformation.getIncome_Total());
+            typeAmountMap.put("Expense",currentInformation.getExpense_Total());
+            typeAmountMap.put("Savings",currentInformation.getIncome_Total()-currentInformation.getExpense_Total());
+
+            //initializing colors for the entries
+            ArrayList<Integer> colors = new ArrayList<>();
+            colors.add(Color.parseColor("#0b2d39"));
+            colors.add(Color.parseColor("#be4d25"));
+            colors.add(Color.parseColor("#2596be"));
+
+
+            //input data and fit data into pie chart entry
+            for(String type: typeAmountMap.keySet()){
+                pieEntries.add(new PieEntry(typeAmountMap.get(type).floatValue(), type));
+            }
+
+            //collecting the entries with label name
+            PieDataSet pieDataSet = new PieDataSet(pieEntries,label);
+            //setting text size of the value
+            pieDataSet.setValueTextSize(10f);
+            //providing color list for coloring different entries
+            pieDataSet.setColors(colors);
+            //grouping the data set from entry to chart
+            PieData pieData = new PieData(pieDataSet);
+            //showing the value of the entries, default true if not set
+            pieData.setDrawValues(true);
+            pieData.setValueFormatter(new PercentFormatter());
+
+            chart.setData(pieData);
+            chart.invalidate();
+        }
         //https://www.codingdemos.com/draw-android-line-chart/
 
         private void CreateGraph(String[] axisData, Integer[] yAxisData) {
@@ -168,7 +266,7 @@
             lines.add(line);
             LineChartData data = new LineChartData();
             data.setLines(lines);
-            lineChartView.setLineChartData(data);
+//            lineChartView.setLineChartData(data);
             Axis axis = new Axis();
             axis.setValues(axisValues);
             axis.setTextColor(getResources().getColor(android.R.color.black));
@@ -263,5 +361,23 @@
         @Override
         public void onPointerCaptureChanged(boolean hasCapture) {
 
+
         }
+
+
+        @Override
+        public void onValueSelected(Entry e, Highlight h) {
+
+            if (e == null)
+                return;
+            Log.i("VAL SELECTED",
+                    "Value: " + e.getY() + ", index: " + h.getX()
+                            + ", DataSet index: " + h.getDataSetIndex());
+        }
+
+        @Override
+        public void onNothingSelected() {
+            Log.i("PieChart", "nothing selected");
+        }
+
     }

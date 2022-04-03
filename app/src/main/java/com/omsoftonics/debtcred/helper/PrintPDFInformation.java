@@ -254,15 +254,17 @@ public class PrintPDFInformation {
             titlePaint.setTextAlign(Paint.Align.CENTER);
             titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
             titlePaint.setTextSize(30);
-            tempCanvas.drawText(""+(isIncome?v.getAmount():'-'),PAGE_WIDTH/4*2+consts,currentY,titlePaint);
+            tempCanvas.drawText(""+(isIncome?v.getAmount():"-"),PAGE_WIDTH/4*2+consts,currentY,titlePaint);
 
 
             titlePaint.setTextAlign(Paint.Align.CENTER);
             titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
             titlePaint.setTextSize(30);
-            tempCanvas.drawText(""+(isIncome?'-':v.getAmount()),PAGE_WIDTH/4*3+consts,currentY,titlePaint);
+            tempCanvas.drawText(""+(isIncome?"-":v.getAmount()),PAGE_WIDTH/4*3+consts,currentY,titlePaint);
 
             titlePaint.setColor(context.getResources().getColor(android.R.color.black));
+
+
 
         }
 
@@ -275,6 +277,31 @@ public class PrintPDFInformation {
         }
 
         titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
+
+        currentY+=100;
+
+
+        titlePaint.setTextAlign(Paint.Align.CENTER);
+        titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
+        titlePaint.setTextSize(30);
+        tempCanvas.drawText("Total : ",PAGE_WIDTH/4*1+consts,currentY,titlePaint);
+
+
+        titlePaint.setTextAlign(Paint.Align.CENTER);
+        titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
+        titlePaint.setTextSize(30);
+        titlePaint.setColor(context.getResources().getColor(R.color.greenRec));
+        tempCanvas.drawText(""+currentInformation.getIncome_Total(),PAGE_WIDTH/4*2+consts,currentY,titlePaint);
+
+
+        titlePaint.setTextAlign(Paint.Align.CENTER);
+        titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
+        titlePaint.setTextSize(30);
+        titlePaint.setColor(context.getResources().getColor(R.color.redRec));
+        tempCanvas.drawText(""+currentInformation.getExpense_Total(),PAGE_WIDTH/4*3+consts,currentY,titlePaint);
+
+        titlePaint.setColor(context.getResources().getColor(android.R.color.black));
+
 
 
 //
@@ -671,19 +698,25 @@ public class PrintPDFInformation {
         titlePaint.setTextAlign(Paint.Align.CENTER);
         titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
         titlePaint.setTextSize(40);
-        tempCanvas.drawText(" Date",PAGE_WIDTH/3*0+consts,currentY,titlePaint);
+        tempCanvas.drawText(" Date",PAGE_WIDTH/4*0+consts,currentY,titlePaint);
 
 
 
         titlePaint.setTextAlign(Paint.Align.CENTER);
         titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
         titlePaint.setTextSize(40);
-        tempCanvas.drawText(" Income ",PAGE_WIDTH/3*1+consts,currentY,titlePaint);
+        tempCanvas.drawText(" Income ",PAGE_WIDTH/4*1+consts,currentY,titlePaint);
 
         titlePaint.setTextAlign(Paint.Align.CENTER);
         titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
         titlePaint.setTextSize(40);
-        tempCanvas.drawText(" Expense ",PAGE_WIDTH/3*2+consts,currentY,titlePaint);
+        tempCanvas.drawText(" Expense ",PAGE_WIDTH/4*2+consts,currentY,titlePaint);
+
+        titlePaint.setTextAlign(Paint.Align.CENTER);
+        titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
+        titlePaint.setTextSize(40);
+        tempCanvas.drawText(" Balance ",PAGE_WIDTH/4*3+consts,currentY,titlePaint);
+
 
 
 
@@ -710,7 +743,7 @@ public class PrintPDFInformation {
             titlePaint.setTextSize(30);
 
             titlePaint.setColor(context.getResources().getColor(R.color.black));
-            tempCanvas.drawText(""+er.format(v.getKey()),PAGE_WIDTH/3*0+consts,currentY,titlePaint);
+            tempCanvas.drawText(""+er.format(v.getKey()),PAGE_WIDTH/4*0+consts,currentY,titlePaint);
 
 
             DisplayIncomeExpensePerDay d=df.get(v.getKey());
@@ -719,14 +752,22 @@ public class PrintPDFInformation {
             titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF,Typeface.NORMAL));
             titlePaint.setTextSize(30);
             titlePaint.setColor(context.getResources().getColor(R.color.greenRec));
-            tempCanvas.drawText(""+d.Income,PAGE_WIDTH/3*1+consts,currentY,titlePaint);
+            tempCanvas.drawText(""+d.Income,PAGE_WIDTH/4*1+consts,currentY,titlePaint);
 
 
             titlePaint.setTextAlign(Paint.Align.CENTER);
             titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
             titlePaint.setTextSize(30);
             titlePaint.setColor(context.getResources().getColor(R.color.redRec));
-            tempCanvas.drawText(""+d.Expense,PAGE_WIDTH/3*2+consts,currentY,titlePaint);
+            tempCanvas.drawText(""+d.Expense,PAGE_WIDTH/4*2+consts,currentY,titlePaint);
+
+            titlePaint.setTextAlign(Paint.Align.CENTER);
+            titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
+            titlePaint.setTextSize(30);
+            titlePaint.setColor(context.getResources().getColor(R.color.lightblue));
+            tempCanvas.drawText(""+(d.Income-d.Expense),PAGE_WIDTH/4*3+consts,currentY,titlePaint);
+
+
         }
 
         titlePaint.setColor(context.getResources().getColor(R.color.black));
@@ -746,9 +787,10 @@ public class PrintPDFInformation {
             try {
 
                 DisplayIncomeExpensePerDay demo=null;
-                Date d=er.parse(v.getDate());
+//                Date d=er.parse(v.getDate());
 
-                String s=d.getMonth()+"/"+d.getYear();
+
+                String s= v.getDate().split("/")[1]+"-"+v.getDate().split("/")[2];
                 if(df.containsKey(s)){
                     demo=dfs.get(s);
                 }
@@ -787,6 +829,17 @@ public class PrintPDFInformation {
 
         currentY+=200;
 
+        if(currentY>=PAGE_HEIGHT-100){
+            currentY=100;
+            myPdfDocument.finishPage(myTempPage);
+            tempPage=new PdfDocument.PageInfo.Builder(PAGE_WIDTH,PAGE_HEIGHT,current_Page++).create();
+            myTempPage= myPdfDocument.startPage(tempPage);
+            tempCanvas=myTempPage.getCanvas();
+        }
+        else{
+            currentY+=50;
+        }
+
         titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
         titlePaint.setTextSize(50);
         tempCanvas.drawText("Month Wise Income Expense Report",PAGE_WIDTH/2,currentY,titlePaint);
@@ -810,29 +863,36 @@ public class PrintPDFInformation {
 
 
 
-        titlePaint.setTextAlign(Paint.Align.CENTER);
-        titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
-        titlePaint.setTextSize(40);
-        tempCanvas.drawText(" Month",PAGE_WIDTH/3*0+consts,currentY,titlePaint);
-
-
 
         titlePaint.setTextAlign(Paint.Align.CENTER);
         titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
         titlePaint.setTextSize(40);
-        tempCanvas.drawText(" Income ",PAGE_WIDTH/3*1+consts,currentY,titlePaint);
+        tempCanvas.drawText(" Month",PAGE_WIDTH/4*0+consts,currentY,titlePaint);
+
+
 
         titlePaint.setTextAlign(Paint.Align.CENTER);
         titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
         titlePaint.setTextSize(40);
-        tempCanvas.drawText(" Expense ",PAGE_WIDTH/3*2+consts,currentY,titlePaint);
+        tempCanvas.drawText(" Income ",PAGE_WIDTH/4*1+consts,currentY,titlePaint);
+
+        titlePaint.setTextAlign(Paint.Align.CENTER);
+        titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
+        titlePaint.setTextSize(40);
+        tempCanvas.drawText(" Expense ",PAGE_WIDTH/4*2+consts,currentY,titlePaint);
+
+        titlePaint.setTextAlign(Paint.Align.CENTER);
+        titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
+        titlePaint.setTextSize(40);
+        tempCanvas.drawText(" Balance ",PAGE_WIDTH/4*3+consts,currentY,titlePaint);
 
 
 
 
 
 
-        for (Map.Entry<String, DisplayIncomeExpensePerDay> v : dfs.entrySet())
+
+        for (Map.Entry<Date, DisplayIncomeExpensePerDay> v : df.entrySet())
         {
             if(currentY>=PAGE_HEIGHT-100){
                 currentY=100;
@@ -852,7 +912,7 @@ public class PrintPDFInformation {
             titlePaint.setTextSize(30);
 
             titlePaint.setColor(context.getResources().getColor(R.color.black));
-            tempCanvas.drawText(""+er.format(v.getKey()),PAGE_WIDTH/3*0+consts,currentY,titlePaint);
+            tempCanvas.drawText(""+er.format(v.getKey()),PAGE_WIDTH/4*0+consts,currentY,titlePaint);
 
 
             DisplayIncomeExpensePerDay d=df.get(v.getKey());
@@ -861,20 +921,25 @@ public class PrintPDFInformation {
             titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF,Typeface.NORMAL));
             titlePaint.setTextSize(30);
             titlePaint.setColor(context.getResources().getColor(R.color.greenRec));
-            tempCanvas.drawText(""+d.Income,PAGE_WIDTH/3*1+consts,currentY,titlePaint);
+            tempCanvas.drawText(""+d.Income,PAGE_WIDTH/4*1+consts,currentY,titlePaint);
 
 
             titlePaint.setTextAlign(Paint.Align.CENTER);
             titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
             titlePaint.setTextSize(30);
             titlePaint.setColor(context.getResources().getColor(R.color.redRec));
-            tempCanvas.drawText(""+d.Expense,PAGE_WIDTH/3*2+consts,currentY,titlePaint);
+            tempCanvas.drawText(""+d.Expense,PAGE_WIDTH/4*2+consts,currentY,titlePaint);
+
+            titlePaint.setTextAlign(Paint.Align.CENTER);
+            titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
+            titlePaint.setTextSize(30);
+            titlePaint.setColor(context.getResources().getColor(R.color.lightblue));
+            tempCanvas.drawText(""+(d.Income-d.Expense),PAGE_WIDTH/4*3+consts,currentY,titlePaint);
+
+
         }
 
-
-
         titlePaint.setColor(context.getResources().getColor(R.color.black));
-
 
 
 
@@ -888,9 +953,9 @@ public class PrintPDFInformation {
             try {
 
                 DisplayIncomeExpensePerDay demo=null;
-                Date d=er.parse(v.getDate());
+//                Date d=er.parse(v.getDate());
 
-                String s=""+d.getYear();
+                String s= v.getDate().split("/")[2];
                 if(df.containsKey(s)){
                     demo=dfs.get(s);
                 }
@@ -931,7 +996,7 @@ public class PrintPDFInformation {
 
         titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
         titlePaint.setTextSize(50);
-        tempCanvas.drawText("Month Wise Income Expense Report",PAGE_WIDTH/2,currentY,titlePaint);
+        tempCanvas.drawText("Year Wise Income Expense Report",PAGE_WIDTH/2,currentY,titlePaint);
 
         currentY+=20;
         tempCanvas.drawLine(100,currentY,PAGE_WIDTH-100,currentY,titlePaint);
@@ -952,29 +1017,37 @@ public class PrintPDFInformation {
 
 
 
-        titlePaint.setTextAlign(Paint.Align.CENTER);
-        titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
-        titlePaint.setTextSize(40);
-        tempCanvas.drawText(" Month",PAGE_WIDTH/3*0+consts,currentY,titlePaint);
-
 
 
         titlePaint.setTextAlign(Paint.Align.CENTER);
         titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
         titlePaint.setTextSize(40);
-        tempCanvas.drawText(" Income ",PAGE_WIDTH/3*1+consts,currentY,titlePaint);
+        tempCanvas.drawText(" Year",PAGE_WIDTH/4*0+consts,currentY,titlePaint);
+
+
 
         titlePaint.setTextAlign(Paint.Align.CENTER);
         titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
         titlePaint.setTextSize(40);
-        tempCanvas.drawText(" Expense ",PAGE_WIDTH/3*2+consts,currentY,titlePaint);
+        tempCanvas.drawText(" Income ",PAGE_WIDTH/4*1+consts,currentY,titlePaint);
+
+        titlePaint.setTextAlign(Paint.Align.CENTER);
+        titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
+        titlePaint.setTextSize(40);
+        tempCanvas.drawText(" Expense ",PAGE_WIDTH/4*2+consts,currentY,titlePaint);
+
+        titlePaint.setTextAlign(Paint.Align.CENTER);
+        titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
+        titlePaint.setTextSize(40);
+        tempCanvas.drawText(" Balance ",PAGE_WIDTH/4*3+consts,currentY,titlePaint);
 
 
 
 
 
 
-        for (Map.Entry<String, DisplayIncomeExpensePerDay> v : dfs.entrySet())
+
+        for (Map.Entry<Date, DisplayIncomeExpensePerDay> v : df.entrySet())
         {
             if(currentY>=PAGE_HEIGHT-100){
                 currentY=100;
@@ -994,7 +1067,7 @@ public class PrintPDFInformation {
             titlePaint.setTextSize(30);
 
             titlePaint.setColor(context.getResources().getColor(R.color.black));
-            tempCanvas.drawText(""+er.format(v.getKey()),PAGE_WIDTH/3*0+consts,currentY,titlePaint);
+            tempCanvas.drawText(""+er.format(v.getKey()),PAGE_WIDTH/4*0+consts,currentY,titlePaint);
 
 
             DisplayIncomeExpensePerDay d=df.get(v.getKey());
@@ -1003,17 +1076,23 @@ public class PrintPDFInformation {
             titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF,Typeface.NORMAL));
             titlePaint.setTextSize(30);
             titlePaint.setColor(context.getResources().getColor(R.color.greenRec));
-            tempCanvas.drawText(""+d.Income,PAGE_WIDTH/3*1+consts,currentY,titlePaint);
+            tempCanvas.drawText(""+d.Income,PAGE_WIDTH/4*1+consts,currentY,titlePaint);
 
 
             titlePaint.setTextAlign(Paint.Align.CENTER);
             titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
             titlePaint.setTextSize(30);
             titlePaint.setColor(context.getResources().getColor(R.color.redRec));
-            tempCanvas.drawText(""+d.Expense,PAGE_WIDTH/3*2+consts,currentY,titlePaint);
+            tempCanvas.drawText(""+d.Expense,PAGE_WIDTH/4*2+consts,currentY,titlePaint);
+
+            titlePaint.setTextAlign(Paint.Align.CENTER);
+            titlePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
+            titlePaint.setTextSize(30);
+            titlePaint.setColor(context.getResources().getColor(R.color.lightblue));
+            tempCanvas.drawText(""+(d.Income-d.Expense),PAGE_WIDTH/4*3+consts,currentY,titlePaint);
+
+
         }
-
-
 
         titlePaint.setColor(context.getResources().getColor(R.color.black));
 
