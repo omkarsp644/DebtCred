@@ -2,12 +2,16 @@
 
     import android.Manifest;
     import android.app.AlertDialog;
+    import android.content.ActivityNotFoundException;
     import android.content.DialogInterface;
     import android.content.Intent;
     import android.content.pm.PackageManager;
     import android.content.res.ColorStateList;
     import android.graphics.Color;
     import android.graphics.Typeface;
+    import android.graphics.pdf.PdfDocument;
+    import android.net.Uri;
+    import android.os.Build;
     import android.os.Bundle;
     import android.text.SpannableString;
     import android.text.style.ForegroundColorSpan;
@@ -21,13 +25,21 @@
     import android.widget.TextView;
     import android.widget.Toast;
 
+    import com.github.mikephil.charting.charts.LineChart;
     import com.github.mikephil.charting.charts.PieChart;
+    import com.github.mikephil.charting.components.AxisBase;
+    import com.github.mikephil.charting.components.XAxis;
     import com.github.mikephil.charting.data.Entry;
+    import com.github.mikephil.charting.data.LineData;
+    import com.github.mikephil.charting.data.LineDataSet;
     import com.github.mikephil.charting.data.PieData;
     import com.github.mikephil.charting.data.PieDataSet;
     import com.github.mikephil.charting.data.PieEntry;
+    import com.github.mikephil.charting.formatter.IAxisValueFormatter;
     import com.github.mikephil.charting.formatter.PercentFormatter;
+    import com.github.mikephil.charting.formatter.ValueFormatter;
     import com.github.mikephil.charting.highlight.Highlight;
+    import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
     import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
     import com.github.mikephil.charting.utils.ColorTemplate;
     import com.google.android.material.navigation.NavigationView;
@@ -42,6 +54,7 @@
     import java.io.IOException;
     import java.text.SimpleDateFormat;
     import java.util.ArrayList;
+    import java.util.Collections;
     import java.util.Date;
     import java.util.HashMap;
     import java.util.List;
@@ -64,6 +77,8 @@
     import lecho.lib.hellocharts.model.PointValue;
     import lecho.lib.hellocharts.view.LineChartView;
 
+    import static com.omsoftonics.debtcred.MainActivity.RECORD_TYPE_EXPENSE;
+    import static com.omsoftonics.debtcred.MainActivity.RECORD_TYPE_INCOME;
     import static com.omsoftonics.debtcred.MainActivity.currentInformation;
 
 
@@ -81,6 +96,8 @@
 
         private PieChart chart;
         SqliteDatabaseHelper helper;
+
+        LineChart linechart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +137,11 @@
 
                         BackupDatabase.exportDB(Dashboard.this);
                         break;
+                    case R.id.rateApp:
+
+                       RateMyApp();
+                        break;
+
 
                 }
                 return true;
@@ -164,6 +186,9 @@
             income.setText(Integer.toString(currentInformation.getIncome_Total()));
             expense.setText(Integer.toString(currentInformation.getExpense_Total()));
             balance.setText(Integer.toString((currentInformation.getBalance())));
+
+
+
      
            // InitializeDataForGraphs();
 
@@ -209,6 +234,7 @@
                 displayPreviousTransactions.addView(v);
 
                 SetupPieChart();
+                Setuplinechart();
 
             }
 
@@ -233,6 +259,163 @@
                 }
             });
 
+        }
+
+        private void Setuplinechart() {
+            linechart=(LineChart)findViewById(R.id.linechart);
+
+            linechart.setOnChartValueSelectedListener(this);
+
+            linechart.setDrawGridBackground(false);
+            linechart.getDescription().setEnabled(false);
+            linechart.setDrawBorders(false);
+
+            linechart.getAxisLeft().setEnabled(false);
+            linechart.getAxisRight().setDrawAxisLine(false);
+            linechart.getAxisRight().setDrawGridLines(false);
+            linechart.getXAxis().setDrawAxisLine(false);
+            linechart.getXAxis().setDrawGridLines(false);
+
+            // enable touch gestures
+            linechart.setTouchEnabled(true);
+
+            // enable scaling and dragging
+            linechart.setDragEnabled(true);
+            linechart.setScaleEnabled(true);
+
+            // if disabled, scaling can be done on x- and y-axis separately
+            linechart.setPinchZoom(false);
+
+
+            linechart.resetTracking();
+
+
+
+            ArrayList<Entry> incomeD=new ArrayList<Entry>();
+            ArrayList<Entry> expenseD=new ArrayList<Entry>();
+            ArrayList<String> dateD=new ArrayList<String>();
+
+
+            class DisplayIncomeExpensePerDay{
+                int Income;
+                int Expense;
+                String Date;
+
+                public DisplayIncomeExpensePerDay(int income, int expense, String date) {
+                    Income = income;
+                    Expense = expense;
+                    Date = date;
+                }
+
+                public DisplayIncomeExpensePerDay(String Date) {
+                    this.Income=0;
+                    this.Expense=0;
+                    this.Date=Date;
+                }
+            }
+
+
+            HashMap<String, DisplayIncomeExpensePerDay> df = new HashMap<String, DisplayIncomeExpensePerDay>();
+            SimpleDateFormat er = new SimpleDateFormat("dd/MM/yyyy");
+
+            for (Record v: currentInformation.getRecord_List()) {
+                try {
+
+                    DisplayIncomeExpensePerDay demo=null;
+                    //Date d=er.parse(v.getDate());
+                    if(df.containsKey(v.getDate())){
+                        demo=df.get(v.getDate());
+                    }
+                    else{
+                        demo= new DisplayIncomeExpensePerDay(v.getDate());
+                    }
+
+                    if (v.getRecordType()==RECORD_TYPE_EXPENSE){
+                        demo.Expense+=v.getAmount();
+                    }
+                    if (v.getRecordType()==RECORD_TYPE_INCOME){
+                        demo.Income+=v.getAmount();
+                    }
+
+
+                    df.put( v.getDate(), demo);
+
+                } catch (Exception e) {
+
+                }
+            }
+
+            int count=0;
+            dateD.add("start");
+            incomeD.add(new Entry(count,0));
+            expenseD.add(new Entry(count,0));
+            count++;
+
+            for (Map.Entry<String, DisplayIncomeExpensePerDay> v : df.entrySet())
+            {
+                dateD.add(v.getKey());
+                DisplayIncomeExpensePerDay ob=df.get(v.getKey());
+
+                incomeD.add(new Entry(count,ob.Income));
+                expenseD.add(new Entry(count,ob.Expense));
+                count++;
+
+            }
+
+
+            LineDataSet dataSetIncome = new LineDataSet(incomeD, "Income");
+            dataSetIncome.setColor(this.getResources().getColor(R.color.greenRec));
+            dataSetIncome.setCircleColor(this.getResources().getColor(R.color.greenRec));
+            LineDataSet dataSetExpense = new LineDataSet(expenseD, "Expense");
+            dataSetExpense.setColor(this.getResources().getColor(R.color.redRec));
+            dataSetExpense.setCircleColor(this.getResources().getColor(R.color.redRec));
+
+            List<ILineDataSet> lines = new ArrayList<ILineDataSet>();
+            lines.add(dataSetIncome);
+            lines.add(dataSetExpense);
+
+
+            LineData data = new LineData(lines);
+            linechart.setData(data);
+
+
+
+
+
+            linechart.invalidate();
+
+
+        }
+
+        private void RateMyApp() {
+            try
+            {
+                Intent rateIntent = rateIntentForUrl("market://details");
+                startActivity(rateIntent);
+            }
+            catch (ActivityNotFoundException e)
+            {
+                Intent rateIntent = rateIntentForUrl("https://play.google.com/store/apps/details");
+                startActivity(rateIntent);
+            }
+
+        }
+
+        private Intent rateIntentForUrl(String url)
+        {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format("%s?id=%s", url, getPackageName())));
+            int flags = Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_MULTIPLE_TASK;
+            if (Build.VERSION.SDK_INT >= 21)
+            {
+                flags |= Intent.FLAG_ACTIVITY_NEW_DOCUMENT;
+            }
+            else
+            {
+                //noinspection deprecation
+                flags |= Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET;
+            }
+            intent.addFlags(flags);
+            return intent;
         }
 
 
@@ -309,64 +492,6 @@
             chart.setData(pieData);
             chart.invalidate();
         }
-        //https://www.codingdemos.com/draw-android-line-chart/
-
-        private void CreateGraph(String[] axisData, Integer[] yAxisData) {
-            List yAxisValues = new ArrayList();
-            List axisValues = new ArrayList();
-            Line line = new Line(yAxisValues);
-            for(int i = 0; i < axisData.length; i++){
-                axisValues.add(i, new AxisValue(i).setLabel(axisData[i]));
-            }
-            for (int i = 0; i < yAxisData.length; i++){
-                yAxisValues.add(new PointValue(i, yAxisData[i]));
-            }
-            List lines = new ArrayList();
-            lines.add(line);
-            LineChartData data = new LineChartData();
-            data.setLines(lines);
-//            lineChartView.setLineChartData(data);
-            Axis axis = new Axis();
-            axis.setValues(axisValues);
-            axis.setTextColor(getResources().getColor(android.R.color.black));
-            axis.setTextSize(10);
-            data.setAxisXBottom(axis);
-
-        }
-
-//        private void InitializeDataForGraphs() {
-//
-//            Map<Date, Integer> m = new HashMap<Date, Integer>();
-//            SimpleDateFormat er = new SimpleDateFormat("dd/MM/yyyy");
-//                for (Record v: currentInformation.getRecord_List()) {
-//                try {
-//
-//                        Date d = er.parse(v.getDatePaid());
-//                        if (!m.containsKey(d)) {
-//                            m.put(d, 0);
-//                        }
-//
-//                        m.put(d, m.get(d) + v.getAmount());
-//
-//                } catch (Exception e) {
-//                }
-//            }
-//            Map<Date, Integer> m1 = new TreeMap(m);
-//            ArrayList<String> xAxis=new ArrayList<>();
-//            ArrayList<Integer> yAxis=new ArrayList<>();
-//            for (Map.Entry<Date, Integer> entry : m1.entrySet())
-//            {
-//                xAxis.add(er.format(entry.getKey()));
-//                yAxis.add(entry.getValue());
-//            }
-//
-//
-//            CreateGraph(xAxis.toArray(new String[0]),yAxis.toArray(new Integer[0]));
-//
-//
-//        }
-
-
 
         public void AddVargani(View view) {
         startActivity(new Intent(Dashboard.this,Registervargani.class));

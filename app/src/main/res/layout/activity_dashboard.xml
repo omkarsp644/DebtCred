@@ -143,11 +143,17 @@
 <!--                    android:layout_width="match_parent"-->
 <!--                    android:layout_height="200sp" />-->
 
+                <com.github.mikephil.charting.charts.LineChart
+                    android:layout_width="match_parent"
+                    android:layout_height="300sp"
+                    android:layout_margin="10sp"
+                    android:id="@+id/linechart"/>
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/chart1"
                     android:layout_width="match_parent"
                     android:layout_height="300sp"
                     android:layout_above="@+id/seekBar1" />
+                
 
                 <LinearLayout
                     android:layout_width="match_parent"

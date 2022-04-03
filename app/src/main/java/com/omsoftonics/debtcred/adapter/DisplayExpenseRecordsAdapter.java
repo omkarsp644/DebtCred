@@ -47,7 +47,7 @@ public class DisplayExpenseRecordsAdapter extends RecyclerView.Adapter<DisplayEx
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
 
-            position = this.expenseRecords.size() - 1 - position;
+//            position = this.expenseRecords.size() - 1 - position;
 
             this.expenseRecords.get(position).setArrayIndex(position);
 

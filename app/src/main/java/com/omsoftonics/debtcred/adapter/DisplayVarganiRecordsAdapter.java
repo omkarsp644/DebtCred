@@ -52,7 +52,7 @@ public class DisplayVarganiRecordsAdapter extends RecyclerView.Adapter<DisplayVa
 
 
 
-        position=varganireciepts.size()-1-position;
+//        position=varganireciepts.size()-1-position;
 
         varganireciepts.get(position).setArrayIndex(position);
 

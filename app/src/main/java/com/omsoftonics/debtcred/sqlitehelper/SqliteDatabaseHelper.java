@@ -142,7 +142,7 @@ public class SqliteDatabaseHelper  extends SQLiteOpenHelper {
                 int d=Integer.parseInt(cursor.getString(cursor.getColumnIndex(RECORDTYPE)));
                 info.setRecordType(d==RECORD_TYPE_INCOME?RECORD_TYPE_INCOME:RECORD_TYPE_EXPENSE);
 
-                informations.add(info);
+                informations.add(0,info);
 
             } while (cursor.moveToNext());
         }
