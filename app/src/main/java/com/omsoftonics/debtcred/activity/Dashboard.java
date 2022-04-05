@@ -1,6 +1,7 @@
     package com.omsoftonics.debtcred.activity;
 
     import android.Manifest;
+    import android.app.ActivityOptions;
     import android.app.AlertDialog;
     import android.content.ActivityNotFoundException;
     import android.content.DialogInterface;
@@ -18,6 +19,7 @@
     import android.text.style.RelativeSizeSpan;
     import android.text.style.StyleSpan;
     import android.util.Log;
+    import android.util.Pair;
     import android.view.MenuItem;
     import android.view.View;
     import android.widget.ImageView;
@@ -36,6 +38,7 @@
     import com.github.mikephil.charting.data.PieDataSet;
     import com.github.mikephil.charting.data.PieEntry;
     import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+    import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
     import com.github.mikephil.charting.formatter.PercentFormatter;
     import com.github.mikephil.charting.formatter.ValueFormatter;
     import com.github.mikephil.charting.highlight.Highlight;
@@ -55,6 +58,7 @@
     import java.text.SimpleDateFormat;
     import java.util.ArrayList;
     import java.util.Collections;
+    import java.util.Comparator;
     import java.util.Date;
     import java.util.HashMap;
     import java.util.List;
@@ -93,7 +97,7 @@
 
         DrawerLayout drawerView;
         NavigationView navigationView;
-
+        CardView c;
         private PieChart chart;
         SqliteDatabaseHelper helper;
 
@@ -113,6 +117,7 @@
        // InitializeDataForGraphs();
 
         helper=new SqliteDatabaseHelper(this);
+        c=(CardView)findViewById(R.id.var);
 
 
 
@@ -194,7 +199,7 @@
 
 
             displayPreviousTransactions.removeAllViews();
-            for (int i=currentInformation.getRecord_List().size()-1;i>=0;i--){
+            for (int i=0;i<currentInformation.getRecord_List().size();i++){
                 Record rec=currentInformation.getRecord_List().get(i);
 
                 View v=getLayoutInflater().inflate(R.layout.display_previous_trans,null,false);
@@ -281,7 +286,7 @@
 
             // enable scaling and dragging
             linechart.setDragEnabled(true);
-            linechart.setScaleEnabled(true);
+            linechart.setScaleEnabled(false);
 
             // if disabled, scaling can be done on x- and y-axis separately
             linechart.setPinchZoom(false);
@@ -315,16 +320,16 @@
             }
 
 
-            HashMap<String, DisplayIncomeExpensePerDay> df = new HashMap<String, DisplayIncomeExpensePerDay>();
+            HashMap<Date, DisplayIncomeExpensePerDay> df = new HashMap<Date, DisplayIncomeExpensePerDay>();
             SimpleDateFormat er = new SimpleDateFormat("dd/MM/yyyy");
 
             for (Record v: currentInformation.getRecord_List()) {
                 try {
 
                     DisplayIncomeExpensePerDay demo=null;
-                    //Date d=er.parse(v.getDate());
-                    if(df.containsKey(v.getDate())){
-                        demo=df.get(v.getDate());
+                    Date d=er.parse(v.getDate());
+                    if(df.containsKey(d)){
+                        demo=df.get(d);
                     }
                     else{
                         demo= new DisplayIncomeExpensePerDay(v.getDate());
@@ -338,11 +343,25 @@
                     }
 
 
-                    df.put( v.getDate(), demo);
+                    df.put( d, demo);
 
                 } catch (Exception e) {
 
                 }
+            }
+
+
+
+            TreeMap<Date,DisplayIncomeExpensePerDay>
+
+
+
+
+
+            dfNew = new TreeMap<Date, DisplayIncomeExpensePerDay>();
+
+            for (Map.Entry<Date, DisplayIncomeExpensePerDay> v : df.entrySet()){
+                dfNew.put(v.getKey(),df.get(v.getKey()));
             }
 
             int count=0;
@@ -351,16 +370,19 @@
             expenseD.add(new Entry(count,0));
             count++;
 
-            for (Map.Entry<String, DisplayIncomeExpensePerDay> v : df.entrySet())
+            for (TreeMap.Entry<Date, DisplayIncomeExpensePerDay> v : dfNew.entrySet())
             {
-                dateD.add(v.getKey());
-                DisplayIncomeExpensePerDay ob=df.get(v.getKey());
+                dateD.add(er.format(v.getKey()));
+                DisplayIncomeExpensePerDay ob=dfNew.get(v.getKey());
 
                 incomeD.add(new Entry(count,ob.Income));
                 expenseD.add(new Entry(count,ob.Expense));
                 count++;
 
             }
+            dateD.add("end");
+            incomeD.add(new Entry(count,0));
+            expenseD.add(new Entry(count,0));
 
 
             LineDataSet dataSetIncome = new LineDataSet(incomeD, "Income");
@@ -373,6 +395,10 @@
             List<ILineDataSet> lines = new ArrayList<ILineDataSet>();
             lines.add(dataSetIncome);
             lines.add(dataSetExpense);
+
+
+            XAxis xAxis = linechart.getXAxis();
+            xAxis.setValueFormatter(new IndexAxisValueFormatter(dateD));
 
 
             LineData data = new LineData(lines);
@@ -494,11 +520,31 @@
         }
 
         public void AddVargani(View view) {
-        startActivity(new Intent(Dashboard.this,Registervargani.class));
+
+        Intent intent=new Intent(Dashboard.this,Registervargani.class);
+
+            Pair[] pairs=new Pair[1];
+
+            c=(CardView)findViewById(R.id.var);
+            pairs[0]=new Pair<View,String>(c,"imah");
+            ActivityOptions options=ActivityOptions.makeSceneTransitionAnimation(Dashboard.this,pairs);
+
+
+        startActivity(intent,options.toBundle());
         }
 
         public void AddExpense(View view) {
-            startActivity(new Intent(Dashboard.this,RegisterExpense.class));
+            Intent intent=new Intent(Dashboard.this,RegisterExpense.class);
+
+            Pair[] pairs=new Pair[1];
+
+            c=(CardView)findViewById(R.id.var1);
+
+            pairs[0]=new Pair<View,String>(c,"imah");
+            ActivityOptions options=ActivityOptions.makeSceneTransitionAnimation(Dashboard.this,pairs);
+
+
+            startActivity(intent,options.toBundle());
         }
 
         public void GetReports(View view) {

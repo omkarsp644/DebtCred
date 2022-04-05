@@ -15,5 +15,7 @@
 
         <item name="fontFamily">@font/font</item>
         <item name="android:textColor">@color/gray</item>
+
+        <item name="android:windowActivityTransitions">true</item>
     </style>
 </resources>

@@ -791,7 +791,7 @@ public class PrintPDFInformation {
 
 
                 String s= v.getDate().split("/")[1]+"-"+v.getDate().split("/")[2];
-                if(df.containsKey(s)){
+                if(dfs.containsKey(s)){
                     demo=dfs.get(s);
                 }
                 else{
@@ -956,7 +956,7 @@ public class PrintPDFInformation {
 //                Date d=er.parse(v.getDate());
 
                 String s= v.getDate().split("/")[2];
-                if(df.containsKey(s)){
+                if(dfs.containsKey(s)){
                     demo=dfs.get(s);
                 }
                 else{
